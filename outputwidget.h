@@ -15,6 +15,12 @@ public:
     explicit OutputWidget(QWidget *parent = 0);
     ~OutputWidget();
 
+public:
+    void append(const QString &text);
+
+private slots:
+    void on_clear_clicked();
+
 private:
     Ui::OutputWidget *ui;
 };

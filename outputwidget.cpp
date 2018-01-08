@@ -12,3 +12,13 @@ OutputWidget::~OutputWidget()
 {
     delete ui;
 }
+
+void OutputWidget::on_clear_clicked()
+{
+    ui->output->clear();
+}
+
+void OutputWidget::append(const QString &text)
+{
+    ui->output->appendPlainText(text);
+}

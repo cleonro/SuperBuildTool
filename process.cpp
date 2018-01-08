@@ -1,6 +1,13 @@
 #include "process.h"
 
-Process::Process()
+Process::Process(QObject *parent)
+    : QProcess(parent)
 {
 
 }
+
+Process::~Process()
+{
+
+}
+
