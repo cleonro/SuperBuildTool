@@ -4,7 +4,8 @@
 #include <QDebug>
 
 //test-remove
-#include <QProcess>
+#include "process.h"
+#include <iostream>
 //
 
 static OutputWidget *output = nullptr;
@@ -45,7 +46,7 @@ MainWindow::MainWindow(QWidget *parent) :
     output = ui->output;
     connect(ui->action_Quit, &QAction::triggered, qApp, &QApplication::quit);
 
-    qDebug() << "SuperBuildTool started!";
+    qInfo() << "SuperBuildTool started!";
 }
 
 MainWindow::~MainWindow()
@@ -55,5 +56,11 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_checkout_clicked()
 {
-
+    qInfo() << "Checkout started...";
+    Process *p = new Process(this);
+    p->setProgram("git");
+    QStringList args;
+    args << "clone" << "--progress" << "git://vtk.org/VTK.git";
+    p->setArguments(args);
+    p->start();
 }

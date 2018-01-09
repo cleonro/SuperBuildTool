@@ -10,6 +10,10 @@ public:
     Process(QObject *parent = nullptr);
     ~Process();
 
+private slots:
+    void onReadyReadStandardOutput();
+    void onReadyReadStandardError();
+
 private:
 
 };
