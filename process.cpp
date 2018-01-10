@@ -16,14 +16,34 @@ Process::~Process()
 
 void Process::onReadyReadStandardOutput()
 {
-    qint64 pos = this->pos();
-    QString outputText = readAllStandardOutput().toStdString().c_str();
-    qInfo() << "standard txt at pos[" << pos << "]: " << outputText;
+    QString outputText = readAllStandardOutput();
+
+//    int count = outputText.count() - 1;
+//    if(count > 0 && outputText.at(count) == '\"')
+//    {
+//        outputText.remove(count, 1);
+//        if(outputText.at(0) == '\"')
+//        {
+//            outputText.remove(0, 1);
+//        }
+//    }
+
+    qInfo() << outputText;
 }
 
 void Process::onReadyReadStandardError()
 {
-    qint64 pos = this->pos();
-    QString errorText = readAllStandardError().toStdString().c_str();
-    qInfo() << "error txt at pos[" << pos << "]: " << errorText;
+    QByteArray errorText = readAllStandardError();
+
+//    int count = errorText.count() - 1;
+//    if(count > 0 && errorText.at(count) == '\"')
+//    {
+//        errorText.remove(count, 1);
+//        if(errorText.at(0) == '\"')
+//        {
+//            errorText.remove(0, 1);
+//        }
+//    }
+
+    qInfo() << errorText.toStdString().c_str();
 }

@@ -52,6 +52,7 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+    output = nullptr;
 }
 
 void MainWindow::on_checkout_clicked()

@@ -20,5 +20,7 @@ void OutputWidget::on_clear_clicked()
 
 void OutputWidget::append(const QString &text)
 {
+    QTextCursor tc = ui->output->textCursor();
+
     ui->output->appendPlainText(text);
 }
