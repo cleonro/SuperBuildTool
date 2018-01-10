@@ -57,6 +57,9 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_checkout_clicked()
 {
+//    static int c = 0;
+//    qInfo() << "Checkout started..." << c++;
+
     qInfo() << "Checkout started...";
     Process *p = new Process(this);
     p->setProgram("git");
@@ -64,4 +67,16 @@ void MainWindow::on_checkout_clicked()
     args << "clone" << "--progress" << "git://vtk.org/VTK.git";
     p->setArguments(args);
     p->start();
+}
+
+void MainWindow::on_configure_clicked()
+{
+    static int c = 0;
+    qInfo() << "Configure started..." << c++;
+}
+
+void MainWindow::on_build_clicked()
+{
+    static int c = 0;
+    qInfo() << "Build started..." << c++;
 }

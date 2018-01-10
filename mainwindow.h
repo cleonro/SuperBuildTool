@@ -18,6 +18,10 @@ public:
 private slots:
     void on_checkout_clicked();
 
+    void on_configure_clicked();
+
+    void on_build_clicked();
+
 private:
     Ui::MainWindow *ui;
 };

@@ -22,7 +22,12 @@ private slots:
     void on_clear_clicked();
 
 private:
+    void deleteCurrentLine();
+    void insertText(const QString &text);
+
+private:
     Ui::OutputWidget *ui;
+    bool m_cr;
 };
 
 #endif // OUTPUTWIDGET_H
