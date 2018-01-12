@@ -27,12 +27,14 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     outputwidget.cpp \
-    process.cpp
+    process.cpp \
+    parser.cpp
 
 HEADERS += \
         mainwindow.h \
     outputwidget.h \
-    process.h
+    process.h \
+    parser.h
 
 FORMS += \
         mainwindow.ui \

@@ -1,0 +1,70 @@
+<WorkingDirectory>
+    
+</WorkingDirectory>
+<!--
+    Take care of CMAKE_BUILD_TYPE and CMAKE_INSTALL_PREFIX
+-->
+<Projects>
+    <VTK>
+        <Checkout>
+            <repository>git://vtk.org/VTK.git</repository>
+            <branch>release</branch>
+        </Checkout>
+        <Configure>
+            <generator>Ninja</generator>
+            <variable name="BUILD_TESTING" type="BOOL">false</variable>
+            <variable name="VTK_Group_Qt" type="BOOL">false</variable>
+            <variable name="Module_vtkGUISupportQt">true</variable>
+            <variable name="Module_vtkGUISupportQtOpenGL">true</variable>
+            <variable name="Module_vtkGUISupportQtSQL">false</variable>
+            <variable name="Module_vtkGUISupportQtWebkit">false</variable>
+            <variable name="Module_vtkRenderingQt">true</variable>
+            <variable name="Module_vtkViewsQt">true</variable>
+        </Configure>
+        <Build>
+        </Build>
+    </VTK>
+    <CTK>
+        <Checkout>
+            <repository>git@github.com:commontk/CTK.git</repository>
+            <branch>master</branch>
+        </Checkout>
+        <Configure>
+            <generator>Ninja</generator>
+            <variable name="CTK_QT_VERSION" type="STRING">5</variable>
+            <variable name="CTK_PLUGIN_org.commontk.eventadmin" type="BOOL">true</variable>
+            <variable name="CTK_PLUGIN_org.commontk.plugingenerator.core" type="BOOL">true</variable>
+            <variable name="CTK_PLUGIN_org.commontk.plugingenerator.ui" type="BOOL">true</variable>
+        </Configure>
+        <Build>
+        </Build>
+    </CTK>
+    <VTKDicom>
+        <Checkout>
+            <repository>git@github.com:dgobbi/vtk-dicom.git</repository>
+            <branch>master</branch>
+        </Checkout>
+        <Configure>
+            <generator>Ninja</generator>
+            <variable name="BUILD_SHARED_LIBS" type="BOOL">true</variable>
+            <variable name="BUILD_TESTING" type="BOOL">false</variable>
+            <variable name="VTK_DIR" type="PROJECTPATH">VTK</variable>
+        </Configure>
+        <Build>
+        </Build>
+    </VTKDicom>
+<!--    
+    <NavicadPrototypeA>
+        <Checkout>
+            <repository>git@github.com:transbite/NavicadPrototypeA.git</repository>
+            <branch>develop</branch>
+        </Checkout>
+        <Configure>
+            <generator>Ninja</generator>
+            
+        </Configure>
+        <Build>
+        </Build>
+    </NavicadPrototypeA>
+-->
+</Projects>

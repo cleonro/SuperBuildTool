@@ -95,6 +95,8 @@
      <string>&amp;File</string>
     </property>
     <addaction name="action_Open"/>
+    <addaction name="action_Save"/>
+    <addaction name="actionS_ave_As"/>
     <addaction name="action_Quit"/>
    </widget>
    <addaction name="menuF_ile"/>
@@ -116,6 +118,16 @@
   <action name="action_Quit">
    <property name="text">
     <string>&amp;Quit</string>
+   </property>
+  </action>
+  <action name="action_Save">
+   <property name="text">
+    <string>&amp;Save</string>
+   </property>
+  </action>
+  <action name="actionS_ave_As">
+   <property name="text">
+    <string>S&amp;ave As...</string>
    </property>
   </action>
  </widget>

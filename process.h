@@ -15,7 +15,7 @@ private slots:
     void onReadyReadStandardError();
 
 private:
-
+    QString m_workingDirectory;
 };
 
 #endif // PROCESS_H
