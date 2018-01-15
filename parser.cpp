@@ -1,6 +1,5 @@
 #include "parser.h"
 
-#include <QDomDocument>
 #include <QFile>
 #include <QDebug>
 
@@ -18,7 +17,8 @@ const QString Parser::sBuild = "Build";
 Parser::Parser(QObject *parent)
     : QObject(parent)
 {
-
+    m_sectionParsers[sProjects] = &Parser::parseProjectsSection;
+    m_sectionParsers[sWorkingDirectory] = &Parser::parseWorkingDirectorySection;
 }
 
 Parser::~Parser()
@@ -56,10 +56,38 @@ bool Parser::parseDocument(const QString &filePath)
     while(!n.isNull())
     {
         QDomElement e = n.toElement();
-        qDebug() << e.tagName() << e.text();
+
+        if(e.isNull())
+        {
+            n = n.nextSibling();
+            continue;
+        }
+
+        QString tagName = e.tagName();
+        if(m_sectionParsers.contains(tagName))
+        {
+            r = (this->*m_sectionParsers[tagName])(e);
+            if(!r)
+            {
+                return false;
+            }
+        }
         n = n.nextSibling();
     }
 
     return r;
 }
 
+bool Parser::parseProjectsSection(const QDomElement &element)
+{
+    bool r = true;
+    qDebug() << Q_FUNC_INFO << element.tagName();
+    return r;
+}
+
+bool Parser::parseWorkingDirectorySection(const QDomElement &element)
+{
+    bool r = true;
+    qDebug() << Q_FUNC_INFO << element.tagName();
+    return r;
+}
