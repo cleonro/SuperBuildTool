@@ -3,6 +3,8 @@
 
 #include <QObject>
 
+#include "parser.h"
+
 class Controller
     : public QObject
 {
@@ -11,8 +13,11 @@ public:
     Controller(QObject *parent = nullptr);
     ~Controller();
 
-private:
+public:
+    void open(const QString &filePath);
 
+private:
+    Parser m_parser;
 };
 
 #endif // CONTROLLER_H

@@ -1,6 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "controller.h"
+
 #include <QMainWindow>
 
 namespace Ui {
@@ -22,8 +24,11 @@ private slots:
 
     void on_build_clicked();
 
+    void onOpen();
+
 private:
     Ui::MainWindow *ui;
+    Controller m_controller;
 };
 
 #endif // MAINWINDOW_H

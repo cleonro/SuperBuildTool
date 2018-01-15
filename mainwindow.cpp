@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include <QFileDialog>
 #include <QDebug>
 
 //test-remove
@@ -45,6 +46,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     output = ui->output;
     connect(ui->action_Quit, &QAction::triggered, qApp, &QApplication::quit);
+    connect(ui->action_Open, &QAction::triggered, this, &MainWindow::onOpen);
 
     qInfo() << "SuperBuildTool started!";
 }
@@ -79,4 +81,14 @@ void MainWindow::on_build_clicked()
 {
     static int c = 0;
     qInfo() << "Build started..." << c++;
+}
+
+void MainWindow::onOpen()
+{
+    QString filePath = QFileDialog::getOpenFileName(this, "Open Superbuild file",
+                                        qApp->applicationDirPath(), "Xml files (*.xml)");
+    if(!filePath.isNull())
+    {
+        m_controller.open(filePath);
+    }
 }
