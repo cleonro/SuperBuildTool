@@ -11,6 +11,9 @@ public:
     ~Project();
 
 private:
+    QString m_projectName;
+    QString m_projectDirectory;
+    QString m_buildType;
 
 };
 

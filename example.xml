@@ -5,6 +5,9 @@
     <!--
         Take care of CMAKE_BUILD_TYPE and CMAKE_INSTALL_PREFIX
     -->
+    <BuildType>
+        Debug
+    </BuildType>
     <Projects>
         <VTK>
             <Checkout>

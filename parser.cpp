@@ -6,6 +6,7 @@
 #include <QDebug>
 
 const QString Parser::sWorkingDirectory = "WorkingDirectory";
+const QString Parser::sBuildType = "BuildType";
 const QString Parser::sProjects = "Projects";
 const QString Parser::sCheckout = "Checkout";
 const QString Parser::sRepository = "repository";
@@ -21,6 +22,7 @@ Parser::Parser(QObject *parent)
 {
     m_sectionParsers[sProjects] = &Parser::parseProjectsSection;
     m_sectionParsers[sWorkingDirectory] = &Parser::parseWorkingDirectorySection;
+    m_sectionParsers[sBuildType] = &Parser::parseBuildTypeSection;
 }
 
 Parser::~Parser()
@@ -47,6 +49,11 @@ bool Parser::open(const QString &filePath)
 QString Parser::workingDirectory()
 {
     return m_workingDirectory;
+}
+
+QString Parser::buildType()
+{
+    return m_buildType;
 }
 
 bool Parser::parseDocument(const QString &filePath)
@@ -111,6 +118,23 @@ bool Parser::parseWorkingDirectorySection(const QDomElement &element)
         m_workingDirectory = value;
     }
     qDebug() << Q_FUNC_INFO << m_workingDirectory;
+
+    return r;
+}
+
+bool Parser::parseBuildTypeSection(const QDomElement &element)
+{
+    bool r = true;
+    static QStringList acceptedValues({"", "Debug", "Release", "debug", "release"});
+    QString value = element.text().trimmed();
+    if(!acceptedValues.contains(value))
+    {
+        m_buildType = "";
+        r = false;
+    }
+    m_buildType = value;
+
+    qDebug() << Q_FUNC_INFO << m_buildType;
 
     return r;
 }

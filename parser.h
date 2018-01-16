@@ -16,14 +16,17 @@ public:
 public:
     bool open(const QString &filePath);
     QString workingDirectory();
+    QString buildType();
 
 private:
     bool parseDocument(const QString &filePath);
     bool parseProjectsSection(const QDomElement &element);
     bool parseWorkingDirectorySection(const QDomElement &element);
+    bool parseBuildTypeSection(const QDomElement &element);
 
 private:
     static const QString sWorkingDirectory;
+    static const QString sBuildType;
     static const QString sProjects;
     static const QString sCheckout;
     static const QString sRepository;
@@ -36,6 +39,7 @@ private:
 
     QMap<QString, SectionParserType> m_sectionParsers;
     QString m_workingDirectory;
+    QString m_buildType;
 };
 
 #endif // PARSER_H
