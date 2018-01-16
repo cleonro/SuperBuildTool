@@ -30,7 +30,7 @@ SOURCES += \
     process.cpp \
     parser.cpp \
     controller.cpp \
-    stage.cpp
+    project.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -38,7 +38,7 @@ HEADERS += \
     process.h \
     parser.h \
     controller.h \
-    stage.h
+    project.h
 
 FORMS += \
         mainwindow.ui \

@@ -3,12 +3,12 @@
 
 #include <QObject>
 
-class Stage : public QObject
+class Project : public QObject
 {
     Q_OBJECT
 public:
-    Stage(QObject *parent = nullptr);
-    ~Stage();
+    Project(QObject *parent = nullptr);
+    ~Project();
 
 private:
 
