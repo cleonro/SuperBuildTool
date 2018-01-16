@@ -1,6 +1,8 @@
 #include "parser.h"
 
 #include <QFile>
+#include <QFileInfo>
+#include <QDir>
 #include <QDebug>
 
 const QString Parser::sWorkingDirectory = "WorkingDirectory";
@@ -29,9 +31,22 @@ Parser::~Parser()
 bool Parser::open(const QString &filePath)
 {
     bool r = true;
-
+    QFileInfo fileInfo(filePath);
+    QDir parentDir = fileInfo.dir();
+    parentDir.cdUp();
+    parentDir.cdUp();
+    m_workingDirectory = parentDir.absolutePath();
     r = parseDocument(filePath);
+    if(!r)
+    {
+        m_workingDirectory = "";
+    }
     return r;
+}
+
+QString Parser::workingDirectory()
+{
+    return m_workingDirectory;
 }
 
 bool Parser::parseDocument(const QString &filePath)
@@ -88,6 +103,14 @@ bool Parser::parseProjectsSection(const QDomElement &element)
 bool Parser::parseWorkingDirectorySection(const QDomElement &element)
 {
     bool r = true;
-    qDebug() << Q_FUNC_INFO << element.tagName();
+    QString value = element.text().trimmed();
+    QDir dir(value);
+    bool dirExists = dir.exists();
+    if(!value.isEmpty() && dirExists)
+    {
+        m_workingDirectory = value;
+    }
+    qDebug() << Q_FUNC_INFO << m_workingDirectory;
+
     return r;
 }

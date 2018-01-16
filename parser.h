@@ -15,6 +15,7 @@ public:
 
 public:
     bool open(const QString &filePath);
+    QString workingDirectory();
 
 private:
     bool parseDocument(const QString &filePath);
@@ -34,6 +35,7 @@ private:
     static const QString sBuild;
 
     QMap<QString, SectionParserType> m_sectionParsers;
+    QString m_workingDirectory;
 };
 
 #endif // PARSER_H
