@@ -1,4 +1,5 @@
 #include "parser.h"
+#include "project.h"
 
 #include <QFile>
 #include <QFileInfo>
@@ -103,7 +104,26 @@ bool Parser::parseDocument(const QString &filePath)
 bool Parser::parseProjectsSection(const QDomElement &element)
 {
     bool r = true;
-    qDebug() << Q_FUNC_INFO << element.tagName();
+    QDomNode n = element.firstChild();
+    while(!n.isNull())
+    {
+        QDomElement e = n.toElement();
+        if(e.isNull())
+        {
+            n = n.nextSibling();
+            continue;
+        }
+        QString projectName = e.tagName();
+        Project *proj = new Project(this);
+        proj->setProjectStructure(projectName, m_workingDirectory, m_buildType);
+        QDomNode checkoutElem = e.elementsByTagName(sCheckout).at(0);
+        QDomNode configElem = e.elementsByTagName(sConfigure).at(0);
+        QDomNode buildElem = e.elementsByTagName(sBuild).at(0);
+        createCheckoutProcess(proj, checkoutElem);
+        createConfigureProcess(proj, configElem);
+        createBuildProcess(proj, buildElem);
+        n = n.nextSibling();
+    }
     return r;
 }
 
@@ -117,8 +137,6 @@ bool Parser::parseWorkingDirectorySection(const QDomElement &element)
     {
         m_workingDirectory = value;
     }
-    qDebug() << Q_FUNC_INFO << m_workingDirectory;
-
     return r;
 }
 
@@ -133,8 +151,35 @@ bool Parser::parseBuildTypeSection(const QDomElement &element)
         r = false;
     }
     m_buildType = value;
+    return r;
+}
 
-    qDebug() << Q_FUNC_INFO << m_buildType;
+bool Parser::createCheckoutProcess(Project *project, const QDomNode &domNode)
+{
+    bool r = true;
+    if(domNode.isNull())
+    {
+        return false;
+    }
+    return r;
+}
 
+bool Parser::createConfigureProcess(Project *project, const QDomNode &domNode)
+{
+    bool r = true;
+    if(domNode.isNull())
+    {
+        return false;
+    }
+    return r;
+}
+
+bool Parser::createBuildProcess(Project *project, const QDomNode &domNode)
+{
+    bool r = true;
+    if(domNode.isNull())
+    {
+        return false;
+    }
     return r;
 }

@@ -30,10 +30,15 @@ QString Project::buildType()
 
 void Project::setProjectStructure(const QString &projectName, const QString &workingDirectory, const QString &buildType)
 {
+    QDir workDir(workingDirectory);
     QDir projDirectory(workingDirectory + "/" + projectName);
     //QDir sourceDirectory(workingDirectory + "/" + projectName + "/" + projectName);
     QDir buildDirectory(workingDirectory + "/" + projectName + "/build_" + buildType);
 
+    if(!projDirectory.exists())
+    {
+        workDir.mkdir(projectName);
+    }
     if(!buildDirectory.exists())
     {
         projDirectory.mkdir(buildDirectory.dirName());

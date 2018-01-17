@@ -5,6 +5,8 @@
 #include <QDomDocument>
 #include <QMap>
 
+class Project;
+
 class Parser : public QObject
 {
     Q_OBJECT
@@ -23,6 +25,10 @@ private:
     bool parseProjectsSection(const QDomElement &element);
     bool parseWorkingDirectorySection(const QDomElement &element);
     bool parseBuildTypeSection(const QDomElement &element);
+
+    bool createCheckoutProcess(Project *project, const QDomNode &domNode);
+    bool createConfigureProcess(Project *project, const QDomNode &domNode);
+    bool createBuildProcess(Project *project, const QDomNode &domNode);
 
 private:
     static const QString sWorkingDirectory;
