@@ -41,6 +41,7 @@ private:
     static const QString sRepository;
     static const QString sBranch;
     static const QString sConfigure;
+    static const QString sGenerator;
     static const QString sVariable;
     static const QString sName;
     static const QString sType;

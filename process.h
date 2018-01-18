@@ -33,7 +33,7 @@ struct ProcessData
     QString repository;
     QString branch;
     QString generator;
-    QVector<CMakeVariable> m_cmakeVariables;
+    QVector<CMakeVariable> cmakeVariables;
 };
 
 class Process : public QProcess

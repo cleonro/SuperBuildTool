@@ -14,6 +14,7 @@ const QString Parser::sCheckout = "Checkout";
 const QString Parser::sRepository = "repository";
 const QString Parser::sBranch = "branch";
 const QString Parser::sConfigure = "Configure";
+const QString Parser::sGenerator = "generator";
 const QString Parser::sVariable = "variable";
 const QString Parser::sName = "name";
 const QString Parser::sType = "type";
@@ -195,9 +196,32 @@ bool Parser::createConfigureProcess(Project *project, const QDomNode &domNode)
     {
         return false;
     }
+    QDomElement e = domNode.toElement();
+    QDomElement genElem = e.elementsByTagName(sGenerator).at(0).toElement();
+    if(genElem.isNull())
+    {
+        return false;
+    }
+    QString generator = genElem.text();
+    QDomNodeList varNodes = e.elementsByTagName(sVariable);
     Process *process = new Process(project);
     process->setProject(project);
-
+    ProcessData& processData = process->processData();
+    processData.type = ProcessData::Configure;
+    processData.generator = generator;
+    for(int i = 0; i < varNodes.count(); ++i)
+    {
+        QDomElement varElem = varNodes.at(i).toElement();
+        if(varElem.isNull())
+        {
+            continue;
+        }
+        ProcessData::CMakeVariable cmakeVar;
+        cmakeVar.name = varElem.attribute(sName);
+        cmakeVar.type = varElem.attribute(sType);
+        cmakeVar.value = varElem.text();
+        processData.cmakeVariables.push_back(cmakeVar);
+    }
     project->addProcess(process);
     return r;
 }

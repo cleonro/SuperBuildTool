@@ -18,12 +18,12 @@
                 <generator>Ninja</generator>
                 <variable name="BUILD_TESTING" type="BOOL">false</variable>
                 <variable name="VTK_Group_Qt" type="BOOL">false</variable>
-                <variable name="Module_vtkGUISupportQt">true</variable>
-                <variable name="Module_vtkGUISupportQtOpenGL">true</variable>
-                <variable name="Module_vtkGUISupportQtSQL">false</variable>
-                <variable name="Module_vtkGUISupportQtWebkit">false</variable>
-                <variable name="Module_vtkRenderingQt">true</variable>
-                <variable name="Module_vtkViewsQt">true</variable>
+                <variable name="Module_vtkGUISupportQt" type="BOOL">true</variable>
+                <variable name="Module_vtkGUISupportQtOpenGL" type="BOOL">true</variable>
+                <variable name="Module_vtkGUISupportQtSQL" type="BOOL">false</variable>
+                <variable name="Module_vtkGUISupportQtWebkit" type="BOOL">false</variable>
+                <variable name="Module_vtkRenderingQt" type="BOOL">true</variable>
+                <variable name="Module_vtkViewsQt" type="BOOL">true</variable>
             </Configure>
             <Build>
             </Build>
