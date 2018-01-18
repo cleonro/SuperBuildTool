@@ -35,10 +35,12 @@
             </Checkout>
             <Configure>
                 <generator>Ninja</generator>
+                <variable name="BUILD_TESTING" type="BOOL">false</variable>
                 <variable name="CTK_QT_VERSION" type="STRING">5</variable>
                 <variable name="CTK_PLUGIN_org.commontk.eventadmin" type="BOOL">true</variable>
                 <variable name="CTK_PLUGIN_org.commontk.plugingenerator.core" type="BOOL">true</variable>
                 <variable name="CTK_PLUGIN_org.commontk.plugingenerator.ui" type="BOOL">true</variable>
+                <variable name="CTK_APP_ctkDICOM" type="BOOL">true</variable>
             </Configure>
             <Build>
             </Build>
