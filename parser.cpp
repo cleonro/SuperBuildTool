@@ -33,6 +33,8 @@ Parser::~Parser()
 
 bool Parser::open(const QString &filePath)
 {
+    clear();
+
     bool r = true;
     QFileInfo fileInfo(filePath);
     QDir parentDir = fileInfo.dir();
@@ -182,4 +184,15 @@ bool Parser::createBuildProcess(Project *project, const QDomNode &domNode)
         return false;
     }
     return r;
+}
+
+void Parser::clear()
+{
+    m_workingDirectory = "";
+    m_buildType = "";
+    for(int i = 0; i < m_projects.count(); ++i)
+    {
+        m_projects[i]->deleteLater();
+    }
+    m_projects.clear();
 }

@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QDomDocument>
 #include <QMap>
+#include <QVector>
 
 class Project;
 
@@ -30,6 +31,8 @@ private:
     bool createConfigureProcess(Project *project, const QDomNode &domNode);
     bool createBuildProcess(Project *project, const QDomNode &domNode);
 
+    void clear();
+
 private:
     static const QString sWorkingDirectory;
     static const QString sBuildType;
@@ -44,8 +47,10 @@ private:
     static const QString sBuild;
 
     QMap<QString, SectionParserType> m_sectionParsers;
+
     QString m_workingDirectory;
     QString m_buildType;
+    QVector<Parser*> m_projects;
 };
 
 #endif // PARSER_H
