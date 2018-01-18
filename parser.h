@@ -21,6 +21,9 @@ public:
     QString workingDirectory();
     QString buildType();
 
+    int projectsCount();
+    Project* project(const int &i);
+
 private:
     bool parseDocument(const QString &filePath);
     bool parseProjectsSection(const QDomElement &element);

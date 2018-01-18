@@ -251,3 +251,15 @@ void Parser::clear()
     }
     m_projects.clear();
 }
+
+int Parser::projectsCount()
+{
+    int count = m_projects.count();
+    return count;
+}
+
+Project* Parser::project(const int &i)
+{
+    Project *r = i >=0 && i < m_projects.count() ? m_projects[i] : nullptr;
+    return r;
+}
