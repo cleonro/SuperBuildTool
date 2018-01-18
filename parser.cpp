@@ -178,7 +178,7 @@ bool Parser::createCheckoutProcess(Project *project, const QDomNode &domNode)
         return false;
     }
     QString repository = repElem.text().trimmed();
-    QString branch = repElem.text().trimmed();
+    QString branch = branchElem.text().trimmed();
     Process *process = new Process(project);
     process->setProject(project);
     ProcessData &processData = process->processData();

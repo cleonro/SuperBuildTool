@@ -26,6 +26,14 @@ private slots:
 
     void onOpen();
 
+    void onPhaseStarted(int phase);
+    void onPhaseFinished(int phase);
+
+    void on_all_clicked();
+
+private:
+    void enableButtons(bool enabled = true);
+
 private:
     Ui::MainWindow *ui;
     Controller m_controller;

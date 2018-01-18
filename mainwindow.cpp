@@ -47,8 +47,9 @@ MainWindow::MainWindow(QWidget *parent) :
     output = ui->output;
     connect(ui->action_Quit, &QAction::triggered, qApp, &QApplication::quit);
     connect(ui->action_Open, &QAction::triggered, this, &MainWindow::onOpen);
+    connect(&m_controller, &Controller::phaseStarted, this, &MainWindow::onPhaseStarted);
+    connect(&m_controller, &Controller::phaseFinished, this, &MainWindow::onPhaseFinished);
 
-    qInfo() << "SuperBuildTool started!";
 }
 
 MainWindow::~MainWindow()
@@ -62,25 +63,29 @@ void MainWindow::on_checkout_clicked()
 //    static int c = 0;
 //    qInfo() << "Checkout started..." << c++;
 
-    qInfo() << "Checkout started...";
-    Process *p = new Process(this);
-    p->setProgram("git");
-    QStringList args;
-    args << "clone" << "--progress" << "git://vtk.org/VTK.git" << "VTKd" << "--branch" << "release";
-    p->setArguments(args);
-    p->start();
+//    qInfo() << "Checkout started...";
+//    Process *p = new Process(this);
+//    p->setProgram("git");
+//    QStringList args;
+//    args << "clone" << "--progress" << "git://vtk.org/VTK.git" << "VTKd" << "--branch" << "release";
+//    p->setArguments(args);
+//    p->start();
+    m_controller.startPhase(ControllerPhase::Checkout);
 }
 
 void MainWindow::on_configure_clicked()
 {
-    static int c = 0;
-    qInfo() << "Configure started..." << c++;
+    m_controller.startPhase(ControllerPhase::Configure);
 }
 
 void MainWindow::on_build_clicked()
 {
-    static int c = 0;
-    qInfo() << "Build started..." << c++;
+    m_controller.startPhase(ControllerPhase::Build);
+}
+
+void MainWindow::on_all_clicked()
+{
+    m_controller.startPhase(ControllerPhase::All);
 }
 
 void MainWindow::onOpen()
@@ -91,4 +96,24 @@ void MainWindow::onOpen()
     {
         m_controller.open(filePath);
     }
+}
+
+void MainWindow::onPhaseStarted(int phase)
+{
+    Q_UNUSED(phase)
+    enableButtons(false);
+}
+
+void MainWindow::onPhaseFinished(int phase)
+{
+    Q_UNUSED(phase)
+    enableButtons();
+}
+
+void MainWindow::enableButtons(bool enabled)
+{
+    ui->checkout->setEnabled(enabled);
+    ui->configure->setEnabled(enabled);
+    ui->build->setEnabled(enabled);
+    ui->all->setEnabled(enabled);
 }

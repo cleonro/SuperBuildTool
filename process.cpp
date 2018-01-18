@@ -77,7 +77,7 @@ void Process::startProcess()
         return;
     }
     setupProcess();
-    QProcess::start();
+    this->start();
 }
 
 void Process::setupProcess()
@@ -89,9 +89,9 @@ void Process::setupProcess()
     {
         this->setProgram("git");
         QDir gitDir(projectDir + "/" + projectName + "/.git");
-        if(gitDir.exists())
+        if(!gitDir.exists())
         {
-            this->setWorkingDirectory(gitDir.absolutePath());
+            this->setWorkingDirectory(projectDir);
             QStringList args;
             args<< "clone" << "--progress" << m_data.repository << projectName << "--branch" << m_data.branch;
             this->setArguments(args);
@@ -110,13 +110,15 @@ void Process::setupProcess()
         this->setWorkingDirectory(projectDir + "/build_" + buildType);
         QStringList args;
         //TODO - take into account other CMake generators
-        args << "-G" << "\"Ninja\"";
+        args << "-G" << "Ninja";
         for(int i = 0; i < m_data.cmakeVariables.count(); ++i)
         {
             QString value = setupCMakeVariable(m_data.cmakeVariables[i]);
             args << "-D" << value;
         }
-
+        QDir sourceDir(projectDir + "/" + projectName);
+        args << sourceDir.absolutePath();
+        this->setArguments(args);
     }
     if(m_data.type == ProcessData::Build)
     {
@@ -134,7 +136,7 @@ QString Process::setupCMakeVariable(const ProcessData::CMakeVariable &cmakeVaria
     if(cmakeVariable.type == "PROJECTBUILDPATH")
     {
         type = "PATH";
-        QDir dir(m_project->projectDirectory() + "../" + cmakeVariable.value + "/build_" + m_project->buildType());
+        QDir dir(m_project->projectDirectory() + "/../" + cmakeVariable.value + "/build_" + m_project->buildType());
         value = dir.absolutePath();
     }
     else if(cmakeVariable.type == "WORKINGDIRECTORYPATH")
@@ -157,6 +159,6 @@ QString Process::setupCMakeVariable(const ProcessData::CMakeVariable &cmakeVaria
     QString r(cmakeVariable.name + ':');
     r += type;
     r += '=';
-    r = r + '\"' + value + '\"';
+    r += value;
     return r;
 }

@@ -30,6 +30,7 @@ public:
     void open(const QString &filePath);
 
 signals:
+    void phaseStarted(int phase);
     void phaseFinished(int phase);
 
 private slots:
