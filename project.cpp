@@ -48,3 +48,8 @@ void Project::setProjectStructure(const QString &projectName, const QString &wor
     m_projectDirectory = projDirectory.absolutePath();
     m_buildType = buildType;
 }
+
+void Project::addProcess(Process *process)
+{
+    m_processes[process->processData().type] = process;
+}

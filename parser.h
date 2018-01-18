@@ -50,7 +50,7 @@ private:
 
     QString m_workingDirectory;
     QString m_buildType;
-    QVector<Parser*> m_projects;
+    QVector<Project*> m_projects;
 };
 
 #endif // PARSER_H

@@ -1,5 +1,6 @@
 #include "parser.h"
 #include "project.h"
+#include "process.h"
 
 #include <QFile>
 #include <QFileInfo>
@@ -125,6 +126,7 @@ bool Parser::parseProjectsSection(const QDomElement &element)
         createConfigureProcess(proj, configElem);
         createBuildProcess(proj, buildElem);
         n = n.nextSibling();
+        m_projects.push_back(proj);
     }
     return r;
 }
@@ -163,6 +165,26 @@ bool Parser::createCheckoutProcess(Project *project, const QDomNode &domNode)
     {
         return false;
     }
+    QDomElement e = domNode.toElement();
+    QDomElement repElem = e.elementsByTagName(sRepository).at(0).toElement();
+    if(repElem.isNull())
+    {
+        return false;
+    }
+    QDomElement branchElem = e.elementsByTagName(sBranch).at(0).toElement();
+    if(branchElem.isNull())
+    {
+        return false;
+    }
+    QString repository = repElem.text().trimmed();
+    QString branch = repElem.text().trimmed();
+    Process *process = new Process(project);
+    process->setProject(project);
+    ProcessData &processData = process->processData();
+    processData.type = ProcessData::Checkout;
+    processData.repository = repository;
+    processData.branch = branch;
+    project->addProcess(process);
     return r;
 }
 
@@ -173,6 +195,10 @@ bool Parser::createConfigureProcess(Project *project, const QDomNode &domNode)
     {
         return false;
     }
+    Process *process = new Process(project);
+    process->setProject(project);
+
+    project->addProcess(process);
     return r;
 }
 
@@ -183,6 +209,10 @@ bool Parser::createBuildProcess(Project *project, const QDomNode &domNode)
     {
         return false;
     }
+    Process *process = new Process(project);
+    process->setProject(project);
+
+    project->addProcess(process);
     return r;
 }
 
