@@ -235,7 +235,8 @@ bool Parser::createBuildProcess(Project *project, const QDomNode &domNode)
     }
     Process *process = new Process(project);
     process->setProject(project);
-
+    ProcessData& processData = process->processData();
+    processData.type = ProcessData::Build;
     project->addProcess(process);
     return r;
 }
