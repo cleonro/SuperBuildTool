@@ -47,9 +47,15 @@ public:
     Project* project();
     ProcessData& processData();
 
+    void startProcess();
+
 private slots:
     void onReadyReadStandardOutput();
     void onReadyReadStandardError();
+
+private:
+    void setupProcess();
+    QString setupCMakeVariable(const ProcessData::CMakeVariable &cmakeVariable);
 
 private:
     QString m_workingDirectory;

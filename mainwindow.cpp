@@ -66,7 +66,7 @@ void MainWindow::on_checkout_clicked()
     Process *p = new Process(this);
     p->setProgram("git");
     QStringList args;
-    args << "clone" << "--progress" << "git://vtk.org/VTK.git";
+    args << "clone" << "--progress" << "git://vtk.org/VTK.git" << "VTKd" << "--branch" << "release";
     p->setArguments(args);
     p->start();
 }
