@@ -75,7 +75,7 @@
       <property name="orientation">
        <enum>Qt::Vertical</enum>
       </property>
-      <widget class="QWidget" name="description" native="true">
+      <widget class="ProjectsWidget" name="projects" native="true">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
          <horstretch>0</horstretch>
@@ -101,7 +101,7 @@
      <x>0</x>
      <y>0</y>
      <width>642</width>
-     <height>20</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuF_ile">
@@ -151,6 +151,12 @@
    <class>OutputWidget</class>
    <extends>QWidget</extends>
    <header>outputwidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>ProjectsWidget</class>
+   <extends>QWidget</extends>
+   <header>projectswidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

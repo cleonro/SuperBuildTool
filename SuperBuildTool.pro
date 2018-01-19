@@ -30,7 +30,8 @@ SOURCES += \
     process.cpp \
     parser.cpp \
     controller.cpp \
-    project.cpp
+    project.cpp \
+    projectswidget.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -38,8 +39,10 @@ HEADERS += \
     process.h \
     parser.h \
     controller.h \
-    project.h
+    project.h \
+    projectswidget.h
 
 FORMS += \
         mainwindow.ui \
-    outputwidget.ui
+    outputwidget.ui \
+    projectswidget.ui
