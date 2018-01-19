@@ -71,6 +71,12 @@ void Controller::onProcessFinished(bool successful, int phase)
 
         m_activePhase = m_activePhase == ControllerPhase::Checkout ? ControllerPhase::Configure :
                        (m_activePhase == ControllerPhase::Configure ? ControllerPhase::Build : ControllerPhase::All);
+        if(m_activePhase == ControllerPhase::All)
+        {
+            emit phaseFinished(phase);
+            m_activePhase = ControllerPhase::None;
+            return;
+        }
         m_processCounter = 0;
         ProcessData::ProcessType processType = processTypeFromControllerPhase(m_activePhase);
         Project* project = m_parser.project(0);
