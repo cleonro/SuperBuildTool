@@ -21,23 +21,6 @@ void OutputWidget::on_clear_clicked()
 
 void OutputWidget::append(const QString &text)
 {
-//    QStringList tokens = text.split('\r', QString::SkipEmptyParts);
-//    text.indexOf()
-//    int pos = 0;
-//    int count = tokens.count();
-//    for(int i = 0; i < count; ++i)
-//    {
-//        QString t = tokens[i];
-//        m_cr = text.at(pos) == '\r';
-//        insertText(t);
-//        pos += t.count();
-//    }
-//    m_cr = text.at(text.count() - 1) == '\r';
-
-    //text-remove
-    bool complete = text.contains("100%");
-    //
-
     int crpos = text.indexOf('\r');
     if(crpos == -1)
     {

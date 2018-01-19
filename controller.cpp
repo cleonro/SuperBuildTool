@@ -36,8 +36,7 @@ void Controller::startPhase(const ControllerPhase &phase)
     int projCount = m_parser.projectsCount();
     if(phase == ControllerPhase::None || m_activePhase != ControllerPhase::None || projCount == 0)
     {
-        emit phaseFinished(phase);
-        m_activePhase = ControllerPhase::None;
+        finishPhase(phase);
         return;
     }
     m_processCounter = 0;
@@ -45,15 +44,14 @@ void Controller::startPhase(const ControllerPhase &phase)
     m_activePhase = phase == ControllerPhase::All ? ControllerPhase::Checkout : phase;
     ProcessData::ProcessType processType = processTypeFromControllerPhase(m_activePhase);
     Project* project = m_parser.project(0);
-    project->startProcess(processType);
+    project->startProcess(processType, m_extraArguments);
 }
 
 void Controller::onProcessFinished(bool successful, int phase)
 {
     if(!successful)
     {
-        emit phaseFinished(phase);
-        m_activePhase = ControllerPhase::None;
+        finishPhase(phase);
         return;
     }
 
@@ -64,8 +62,7 @@ void Controller::onProcessFinished(bool successful, int phase)
     {
         if(m_requestedPhase != ControllerPhase::All || m_activePhase == m_requestedPhase)
         {
-            emit phaseFinished(phase);
-            m_activePhase = ControllerPhase::None;
+            finishPhase(phase);
             return;
         }
 
@@ -73,20 +70,19 @@ void Controller::onProcessFinished(bool successful, int phase)
                        (m_activePhase == ControllerPhase::Configure ? ControllerPhase::Build : ControllerPhase::All);
         if(m_activePhase == ControllerPhase::All)
         {
-            emit phaseFinished(phase);
-            m_activePhase = ControllerPhase::None;
+            finishPhase(phase);
             return;
         }
         m_processCounter = 0;
         ProcessData::ProcessType processType = processTypeFromControllerPhase(m_activePhase);
         Project* project = m_parser.project(0);
-        project->startProcess(processType);
+        project->startProcess(processType, m_extraArguments);
         return;
     }
 
     ProcessData::ProcessType processType = processTypeFromControllerPhase(m_activePhase);
     Project* project = m_parser.project(m_processCounter);
-    project->startProcess(processType);
+    project->startProcess(processType, m_extraArguments);
 }
 
 ProcessData::ProcessType Controller::processTypeFromControllerPhase(const ControllerPhase &phase)
@@ -112,4 +108,18 @@ ProcessData::ProcessType Controller::processTypeFromControllerPhase(const Contro
     }
 
     return processType;
+}
+
+void Controller::startClean()
+{
+    m_extraArguments.clear();
+    m_extraArguments << "clean";
+    startPhase(ControllerPhase::Build);
+}
+
+void Controller::finishPhase(int phase)
+{
+    emit phaseFinished(phase);
+    m_activePhase = ControllerPhase::None;
+    m_extraArguments.clear();
 }

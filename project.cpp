@@ -66,7 +66,7 @@ void Project::addProcess(Process *process)
             this, &Project::onProcessFinished);
 }
 
-void Project::startProcess(ProcessData::ProcessType processType)
+void Project::startProcess(ProcessData::ProcessType processType, const QStringList &extraArguments)
 {
     Process *process = m_processes[processType];
     if(process == nullptr || !m_isActive)
@@ -74,7 +74,7 @@ void Project::startProcess(ProcessData::ProcessType processType)
         emit processFinished(true, (int)processType);
         return;
     }
-    process->startProcess();
+    process->startProcess(extraArguments);
 }
 
 void Project::onProcessFinished(int exitCode, QProcess::ExitStatus exitStatus)

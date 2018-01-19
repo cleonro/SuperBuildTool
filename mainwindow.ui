@@ -61,6 +61,13 @@
         </property>
        </spacer>
       </item>
+      <item>
+       <widget class="QPushButton" name="clean">
+        <property name="text">
+         <string>Clean</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </item>
     <item>
@@ -94,7 +101,7 @@
      <x>0</x>
      <y>0</y>
      <width>642</width>
-     <height>22</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuF_ile">

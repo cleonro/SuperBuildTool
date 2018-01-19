@@ -107,3 +107,8 @@ void MainWindow::enableButtons(bool enabled)
     ui->build->setEnabled(enabled);
     ui->all->setEnabled(enabled);
 }
+
+void MainWindow::on_clean_clicked()
+{
+    m_controller.startClean();
+}

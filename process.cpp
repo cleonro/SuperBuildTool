@@ -70,13 +70,19 @@ void Process::onReadyReadStandardError()
     qInfo() << errorText.toStdString().c_str();
 }
 
-void Process::startProcess()
+void Process::startProcess(const QStringList &extraArguments)
 {
     if(m_project == nullptr)
     {
         return;
     }
     setupProcess();
+    if(extraArguments.count() > 0)
+    {
+        QStringList args = this->arguments();
+        args.append(extraArguments);
+        this->setArguments(args);
+    }
     this->start();
 }
 
@@ -124,6 +130,8 @@ void Process::setupProcess()
     {
         this->setProgram("ninja");
         this->setWorkingDirectory(projectDir + "/build_" + buildType);
+        QStringList args;
+        this->setArguments(args);
     }
 }
 

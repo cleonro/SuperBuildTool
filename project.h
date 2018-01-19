@@ -22,7 +22,7 @@ public:
     void setProjectStructure(const QString &projectName, const QString &workingDirectory, const QString &buildType);
     void addProcess(Process *process);
 
-    void startProcess(ProcessData::ProcessType processType);
+    void startProcess(ProcessData::ProcessType processType, const QStringList &extraArguments = QStringList());
 
 signals:
     void processFinished(bool successful, int phase);

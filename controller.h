@@ -25,6 +25,7 @@ public:
     ~Controller();
 
     void startPhase(const ControllerPhase &phase);
+    void startClean();
 
 public:
     void open(const QString &filePath);
@@ -38,12 +39,14 @@ private slots:
 
 private:
     ProcessData::ProcessType processTypeFromControllerPhase(const ControllerPhase &phase);
+    void finishPhase(int phase);
 
 private:
     Parser m_parser;
     ControllerPhase m_activePhase;
     ControllerPhase m_requestedPhase;
     int m_processCounter;
+    QStringList m_extraArguments;
 };
 
 #endif // CONTROLLER_H

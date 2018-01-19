@@ -47,7 +47,7 @@ public:
     Project* project();
     ProcessData& processData();
 
-    void startProcess();
+    void startProcess(const QStringList &extraArguments = QStringList());
 
 private slots:
     void onReadyReadStandardOutput();

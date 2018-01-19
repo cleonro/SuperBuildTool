@@ -31,6 +31,8 @@ private slots:
 
     void on_all_clicked();
 
+    void on_clean_clicked();
+
 private:
     void enableButtons(bool enabled = true);
 
