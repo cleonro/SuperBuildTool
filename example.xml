@@ -54,24 +54,37 @@
                 <generator>Ninja</generator>
                 <variable name="BUILD_SHARED_LIBS" type="BOOL">true</variable>
                 <variable name="BUILD_TESTING" type="BOOL">false</variable>
+                <variable name="USE_DCMTK" type="BOOL">true</variable>
                 <variable name="VTK_DIR" type="PROJECTBUILDPATH">VTK</variable>
+                <!--
+                <variable name="DCMTK_BINARY_DIR" type="WORKINGDIRECTORYPATH">CTK/build_Debug/DCMTK-build</variable>
+                <variable name="DCMTK_SOURCE_DIR" type="WORKINGDIRECTORYPATH">CTK/build_Debug/DCMTK</variable>
+                -->
+                <variable name="DCMTK_BINARY_DIR" type="PROJECTBUILDPATH">CTK/DCMTK-build</variable>
+                <variable name="DCMTK_SOURCE_DIR" type="PROJECTBUILDPATH">CTK/DCMTK</variable>
             </Configure>
             <Build>
             </Build>
         </VTKDicom>
-    <!--    
         <NavicadPrototypeA>
             <Checkout>
                 <repository>git@github.com:transbite/NavicadPrototypeA.git</repository>
-                <branch>develop</branch>
+                <branch>feature/tracking</branch>
             </Checkout>
             <Configure>
                 <generator>Ninja</generator>
-                
+                <variable name="VTK_DIR" type="PROJECTBUILDPATH">VTK</variable>
+                <variable name="CTK_DIR" type="PROJECTBUILDPATH">CTK</variable>
+                <variable name="DICOM_DIR" type="PROJECTBUILDPATH">VTKDicom</variable>
+                <variable name="NAVICAD_ADD_DICOM_QUERY" type="BOOL">false</variable>
+                <variable name="NAVICAD_ADD_EXAM_PLUGIN" type="BOOL">false</variable>
+                <variable name="NAVICAD_APP_NAVICADPROTOTYPE" type="BOOL">true</variable>
+                <variable name="NAVICAD_BUILD_SHARED_LIBS" type="BOOL">true</variable>
+                <variable name="TrackingLogic_INCLUDE_DIR" type="WORKINGDIRECTORYPATH">TrackingLogic/Source</variable>
+                <variable name="TrackingLogic_LIBRARY" type="PROJECTBUILDPATH">TrackingLogic/libTrackingLogic.so</variable>
             </Configure>
             <Build>
             </Build>
         </NavicadPrototypeA>
-    -->
     </Projects>
 </SuperBuild>

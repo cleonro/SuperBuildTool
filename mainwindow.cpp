@@ -107,6 +107,8 @@ void MainWindow::enableButtons(bool enabled)
     ui->configure->setEnabled(enabled);
     ui->build->setEnabled(enabled);
     ui->all->setEnabled(enabled);
+    ui->clean->setEnabled(enabled);
+    ui->projects->setEnabled(enabled);
 }
 
 void MainWindow::on_clean_clicked()

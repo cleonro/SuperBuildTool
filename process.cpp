@@ -140,25 +140,35 @@ void Process::setupProcess()
 QString Process::setupCMakeVariable(const ProcessData::CMakeVariable &cmakeVariable)
 {
     //types that need to be translated to CMake types
-    //      PROJECTBUILDPATH, WORKINGDIRECTORYPATH, WORKINGDIRECTORYFILEPATH
+    //      PROJECTBUILDPATH, WORKINGDIRECTORYPATH, WORKINGDIRECTORYFILEPATH, WORKINGDIRECTORYBUILDPATH
     QString type;
     QString value;
     if(cmakeVariable.type == "PROJECTBUILDPATH")
     {
         type = "PATH";
-        QDir dir(m_project->projectDirectory() + "/../" + cmakeVariable.value + "/build_" + m_project->buildType());
+        int sepPos = cmakeVariable.value.indexOf('/');
+        int strCount = cmakeVariable.value.count();
+        QString projName = cmakeVariable.value.left(sepPos);
+        QString projPath = cmakeVariable.value.right(strCount - projName.count());
+        QDir dir(m_project->projectDirectory() + "/../" + projName + "/build_" + m_project->buildType() + projPath);
         value = dir.absolutePath();
     }
     else if(cmakeVariable.type == "WORKINGDIRECTORYPATH")
     {
         type = "PATH";
-        QDir dir(m_project->projectDirectory() + "../" + cmakeVariable.value);
+        QDir dir(m_project->projectDirectory() + "/../" + cmakeVariable.value);
         value = dir.absolutePath();
     }
     else if(cmakeVariable.type == "WORKINGDIRECTORYFILEPATH")
     {
         type = "FILEPATH";
-        QDir dir(m_project->projectDirectory() + "../" + cmakeVariable.value);
+        QDir dir(m_project->projectDirectory() + "/../" + cmakeVariable.value);
+        value = dir.absolutePath();
+    }
+    else if(cmakeVariable.type == "WORKINGDIRECTORYBUILDPATH")
+    {
+        type = "PATH";
+        QDir dir(m_project->projectDirectory() + "/../" + cmakeVariable.value + "/build_" + m_project->buildType());
         value = dir.absolutePath();
     }
     else
