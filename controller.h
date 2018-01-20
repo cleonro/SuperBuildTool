@@ -7,6 +7,8 @@
 #include "project.h"
 #include "process.h"
 
+class QStandardItemModel;
+
 enum ControllerPhase
 {
     None = 0,
@@ -26,6 +28,9 @@ public:
 
     void startPhase(const ControllerPhase &phase);
     void startClean();
+
+    QStandardItemModel* standardItemModel();
+    Parser* parser();
 
 public:
     void open(const QString &filePath);

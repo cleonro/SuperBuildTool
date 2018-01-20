@@ -123,3 +123,13 @@ void Controller::finishPhase(int phase)
     m_activePhase = ControllerPhase::None;
     m_extraArguments.clear();
 }
+
+QStandardItemModel* Controller::standardItemModel()
+{
+    return m_parser.standardItemModel();
+}
+
+Parser* Controller::parser()
+{
+    return &m_parser;
+}

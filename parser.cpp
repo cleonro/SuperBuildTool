@@ -26,6 +26,10 @@ Parser::Parser(QObject *parent)
     m_sectionParsers[sProjects] = &Parser::parseProjectsSection;
     m_sectionParsers[sWorkingDirectory] = &Parser::parseWorkingDirectorySection;
     m_sectionParsers[sBuildType] = &Parser::parseBuildTypeSection;
+
+    m_itemChangedActions[sProjects] = &Parser::onProjectItemChanged;
+
+    connect(&m_model, &QStandardItemModel::itemChanged, this, &Parser::onStandardItemChanged);
 }
 
 Parser::~Parser()
@@ -43,11 +47,13 @@ bool Parser::open(const QString &filePath)
     parentDir.cdUp();
     parentDir.cdUp();
     m_workingDirectory = parentDir.absolutePath();
+    emit parsingStarted(filePath);
     r = parseDocument(filePath);
     if(!r)
     {
         m_workingDirectory = "";
     }
+    emit parsingFinished(r);
     return r;
 }
 
@@ -123,11 +129,18 @@ bool Parser::parseProjectsSection(const QDomElement &element)
         QDomNode checkoutElem = e.elementsByTagName(sCheckout).at(0);
         QDomNode configElem = e.elementsByTagName(sConfigure).at(0);
         QDomNode buildElem = e.elementsByTagName(sBuild).at(0);
-        createCheckoutProcess(proj, checkoutElem);
-        createConfigureProcess(proj, configElem);
-        createBuildProcess(proj, buildElem);
+
+        QStandardItem *item = new QStandardItem(projectName);
+        item->setCheckable(true);
+        item->setCheckState(Qt::Checked);
+        item->setData(sProjects);
+
+        createCheckoutProcess(proj, checkoutElem, item);
+        createConfigureProcess(proj, configElem, item);
+        createBuildProcess(proj, buildElem, item);
         n = n.nextSibling();
         m_projects.push_back(proj);
+        m_model.appendRow(item);
     }
     return r;
 }
@@ -159,7 +172,7 @@ bool Parser::parseBuildTypeSection(const QDomElement &element)
     return r;
 }
 
-bool Parser::createCheckoutProcess(Project *project, const QDomNode &domNode)
+bool Parser::createCheckoutProcess(Project *project, const QDomNode &domNode, QStandardItem* projectItem)
 {
     bool r = true;
     if(domNode.isNull())
@@ -186,10 +199,13 @@ bool Parser::createCheckoutProcess(Project *project, const QDomNode &domNode)
     processData.repository = repository;
     processData.branch = branch;
     project->addProcess(process);
+    QStandardItem *item = new QStandardItem(sCheckout);
+    item->setData(sCheckout);
+    projectItem->appendRow(item);
     return r;
 }
 
-bool Parser::createConfigureProcess(Project *project, const QDomNode &domNode)
+bool Parser::createConfigureProcess(Project *project, const QDomNode &domNode, QStandardItem *projectItem)
 {
     bool r = true;
     if(domNode.isNull())
@@ -223,10 +239,13 @@ bool Parser::createConfigureProcess(Project *project, const QDomNode &domNode)
         processData.cmakeVariables.push_back(cmakeVar);
     }
     project->addProcess(process);
+    QStandardItem *item = new QStandardItem(sConfigure);
+    item->setData(sConfigure);
+    projectItem->appendRow(item);
     return r;
 }
 
-bool Parser::createBuildProcess(Project *project, const QDomNode &domNode)
+bool Parser::createBuildProcess(Project *project, const QDomNode &domNode, QStandardItem *projectItem)
 {
     bool r = true;
     if(domNode.isNull())
@@ -238,6 +257,9 @@ bool Parser::createBuildProcess(Project *project, const QDomNode &domNode)
     ProcessData& processData = process->processData();
     processData.type = ProcessData::Build;
     project->addProcess(process);
+    QStandardItem *item = new QStandardItem(sBuild);
+    item->setData(sBuild);
+    projectItem->appendRow(item);
     return r;
 }
 
@@ -250,6 +272,7 @@ void Parser::clear()
         m_projects[i]->deleteLater();
     }
     m_projects.clear();
+    m_model.clear();
 }
 
 int Parser::projectsCount()
@@ -262,4 +285,43 @@ Project* Parser::project(const int &i)
 {
     Project *r = i >=0 && i < m_projects.count() ? m_projects[i] : nullptr;
     return r;
+}
+
+QStandardItemModel* Parser::standardItemModel()
+{
+    return &m_model;
+}
+
+void Parser::onStandardItemChanged(QStandardItem *item)
+{
+    QString tag = item->data().toString();
+    if(m_itemChangedActions.contains(tag))
+    {
+        (this->*m_itemChangedActions[tag])(item);
+    }
+}
+
+void Parser::onProjectItemChanged(QStandardItem *item)
+{
+    QString projectName = item->text();
+    bool active = item->checkState() == Qt::Checked;
+    for(int i = 0; i < m_projects.count(); ++i)
+    {
+        Project *proj = m_projects[i];
+        if(projectName == proj->projectName())
+        {
+            proj->setActive(active);
+            return;
+        }
+    }
+}
+
+void Parser::setBuildType(const QString &buildType)
+{
+    m_buildType = buildType;
+    for(int i = 0; i < m_projects.count(); ++i)
+    {
+        Project *proj = m_projects[i];
+        proj->setProjectStructure(proj->projectName(), m_workingDirectory, m_buildType);
+    }
 }

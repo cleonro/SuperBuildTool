@@ -44,12 +44,13 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     qInstallMessageHandler(myMessageOutput);
     ui->setupUi(this);
+    ui->mainToolBar->hide();
     output = ui->output;
     connect(ui->action_Quit, &QAction::triggered, qApp, &QApplication::quit);
     connect(ui->action_Open, &QAction::triggered, this, &MainWindow::onOpen);
     connect(&m_controller, &Controller::phaseStarted, this, &MainWindow::onPhaseStarted);
     connect(&m_controller, &Controller::phaseFinished, this, &MainWindow::onPhaseFinished);
-
+    ui->projects->setController(&m_controller);
 }
 
 MainWindow::~MainWindow()

@@ -122,6 +122,8 @@ void Process::setupProcess()
             QString value = setupCMakeVariable(m_data.cmakeVariables[i]);
             args << "-D" << value;
         }
+        QString cmakeBuildType = "CMAKE_BUILD_TYPE=" + buildType;
+        args << "-D" << cmakeBuildType;
         QDir sourceDir(projectDir + "/" + projectName);
         args << sourceDir.absolutePath();
         this->setArguments(args);
