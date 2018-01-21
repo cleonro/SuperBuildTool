@@ -1,0 +1,102 @@
+<SuperBuild>
+    <WorkingDirectory>
+        /home/cleon/Work/Projects
+    </WorkingDirectory>
+    <!--
+        Take care of CMAKE_BUILD_TYPE and CMAKE_INSTALL_PREFIX
+    -->
+    <BuildType>
+        Debug
+    </BuildType>
+    <Projects>
+        <VTK>
+            <Checkout>
+                <repository>git://vtk.org/VTK.git</repository>
+                <branch>release</branch>
+            </Checkout>
+            <Configure>
+                <generator>Ninja</generator>
+                <variable name="BUILD_TESTING" type="BOOL">false</variable>
+                <variable name="VTK_Group_Qt" type="BOOL">false</variable>
+                <variable name="Module_vtkGUISupportQt" type="BOOL">true</variable>
+                <variable name="Module_vtkGUISupportQtOpenGL" type="BOOL">true</variable>
+                <variable name="Module_vtkGUISupportQtSQL" type="BOOL">false</variable>
+                <variable name="Module_vtkGUISupportQtWebkit" type="BOOL">false</variable>
+                <variable name="Module_vtkRenderingQt" type="BOOL">true</variable>
+                <variable name="Module_vtkViewsQt" type="BOOL">true</variable>
+            </Configure>
+            <Build>
+            </Build>
+        </VTK>
+        <CTK>
+            <Checkout>
+                <repository>git@github.com:commontk/CTK.git</repository>
+                <branch>master</branch>
+            </Checkout>
+            <Configure>
+                <generator>Ninja</generator>
+                <variable name="BUILD_TESTING" type="BOOL">false</variable>
+                <variable name="CTK_QT_VERSION" type="STRING">5</variable>
+                <variable name="CTK_PLUGIN_org.commontk.eventadmin" type="BOOL">true</variable>
+                <variable name="CTK_PLUGIN_org.commontk.plugingenerator.core" type="BOOL">true</variable>
+                <variable name="CTK_PLUGIN_org.commontk.plugingenerator.ui" type="BOOL">true</variable>
+                <variable name="CTK_APP_ctkDICOM" type="BOOL">true</variable>
+            </Configure>
+            <Build>
+            </Build>
+        </CTK>
+        <VTKDicom>
+            <Checkout>
+                <repository>git@github.com:dgobbi/vtk-dicom.git</repository>
+                <branch>master</branch>
+            </Checkout>
+            <Configure>
+                <generator>Ninja</generator>
+                <variable name="BUILD_SHARED_LIBS" type="BOOL">true</variable>
+                <variable name="BUILD_TESTING" type="BOOL">false</variable>
+                <variable name="USE_DCMTK" type="BOOL">true</variable>
+                <variable name="VTK_DIR" type="PROJECTBUILDPATH">VTK</variable>
+                <!--
+                <variable name="DCMTK_BINARY_DIR" type="WORKINGDIRECTORYPATH">CTK/build_Debug/DCMTK-build</variable>
+                <variable name="DCMTK_SOURCE_DIR" type="WORKINGDIRECTORYPATH">CTK/build_Debug/DCMTK</variable>
+                -->
+                <variable name="DCMTK_BINARY_DIR" type="PROJECTBUILDPATH">CTK/DCMTK-build</variable>
+                <variable name="DCMTK_SOURCE_DIR" type="PROJECTBUILDPATH">CTK/DCMTK</variable>
+            </Configure>
+            <Build>
+            </Build>
+        </VTKDicom>
+        <TrackingLogic>
+            <Checkout>
+                <repository>git@github.com:transbite/TrackingFTDITest.git</repository>
+                <branch>library</branch>
+            </Checkout>
+            <Configure>
+                <generator>Ninja</generator>
+                <variable name="BUILD_SHARED_LIBS" type="BOOL">true</variable>
+            </Configure>
+            <Build>
+            </Build>
+        </TrackingLogic>
+        <NavicadPrototypeA>
+            <Checkout>
+                <repository>git@github.com:transbite/NavicadPrototypeA.git</repository>
+                <branch>feature/tracking</branch>
+            </Checkout>
+            <Configure>
+                <generator>Ninja</generator>
+                <variable name="VTK_DIR" type="PROJECTBUILDPATH">VTK</variable>
+                <variable name="CTK_DIR" type="PROJECTBUILDPATH">CTK</variable>
+                <variable name="DICOM_DIR" type="PROJECTBUILDPATH">VTKDicom</variable>
+                <variable name="NAVICAD_ADD_DICOM_QUERY" type="BOOL">false</variable>
+                <variable name="NAVICAD_ADD_EXAM_PLUGIN" type="BOOL">false</variable>
+                <variable name="NAVICAD_APP_NAVICADPROTOTYPE" type="BOOL">true</variable>
+                <variable name="NAVICAD_BUILD_SHARED_LIBS" type="BOOL">true</variable>
+                <variable name="TrackingLogic_INCLUDE_DIR" type="WORKINGDIRECTORYPATH">TrackingLogic/TrackingLogic/TrackingLogic</variable>
+                <variable name="TrackingLogic_LIBRARY" type="PROJECTBUILDPATH">TrackingLogic/bin/libTrackingLogic.so</variable>
+            </Configure>
+            <Build>
+            </Build>
+        </NavicadPrototypeA>
+    </Projects>
+</SuperBuild>

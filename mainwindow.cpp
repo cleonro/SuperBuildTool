@@ -51,6 +51,18 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(&m_controller, &Controller::phaseStarted, this, &MainWindow::onPhaseStarted);
     connect(&m_controller, &Controller::phaseFinished, this, &MainWindow::onPhaseFinished);
     ui->projects->setController(&m_controller);
+
+    //test
+    QStringList env = QProcess::systemEnvironment();
+    foreach (QString str, env)
+    {
+        if(!str.startsWith("CMAKE_PREFIX_PATH"))
+        {
+            continue;
+        }
+        qInfo() << str.toStdString().c_str();
+    }
+    //
 }
 
 MainWindow::~MainWindow()
