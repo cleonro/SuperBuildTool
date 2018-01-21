@@ -1,6 +1,7 @@
 #include "project.h"
 
 #include <QDir>
+#include <QDebug>
 
 Project::Project(QObject *parent)
     : QObject(parent)
@@ -71,16 +72,50 @@ void Project::startProcess(ProcessData::ProcessType processType, const QStringLi
     Process *process = m_processes[processType];
     if(process == nullptr || !m_isActive)
     {
+//        QString msg = "----------- " + m_projectName + " - " + processTypeString(processType)
+//                + " no program started -----";
+//        qInfo() << msg.toStdString().c_str();
         emit processFinished(true, (int)processType);
         return;
     }
+    QString msg = "----------- " + m_projectName + " - " + processTypeString(processType)
+            + " started -----";
+    qInfo() << msg.toStdString().c_str();
     process->startProcess(extraArguments);
 }
 
 void Project::onProcessFinished(int exitCode, QProcess::ExitStatus exitStatus)
 {
     Process *sender = dynamic_cast<Process*>(this->sender());
-    int phase = (int)sender->processData().type;
+    ProcessData::ProcessType processType = sender->processData().type;
+    int phase = (int)processType;
     bool successful = exitCode == EXIT_SUCCESS && exitStatus == QProcess::NormalExit;
+    QString successString = successful ? " succeeded -----" : " failed -----";
+    QString msg = "----------- " + m_projectName + " - " + processTypeString(processType)
+            + successString;
+    qInfo() << msg.toStdString().c_str();
     emit processFinished(successful, phase);
+}
+
+QString Project::processTypeString(const ProcessData::ProcessType &processType)
+{
+    QString str;
+    switch (processType)
+    {
+    case ProcessData::None:
+        str = "None";
+        break;
+    case ProcessData::Checkout:
+        str = "Checkout";
+        break;
+    case ProcessData::Configure:
+        str = "Configure";
+        break;
+    case ProcessData::Build:
+        str = "Build";
+        break;
+    default:
+        break;
+    }
+    return str;
 }

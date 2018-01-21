@@ -24,6 +24,8 @@ public:
 
     void startProcess(ProcessData::ProcessType processType, const QStringList &extraArguments = QStringList());
 
+    QString processTypeString(const ProcessData::ProcessType &processType);
+
 signals:
     void processFinished(bool successful, int phase);
 

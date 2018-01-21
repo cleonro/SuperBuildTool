@@ -52,6 +52,7 @@
             <Configure>
                 <generator>Ninja</generator>
                 <variable name="BUILD_SHARED_LIBS" type="BOOL">true</variable>
+				<variable name="BUILD_PROGRAMS" type="BOOL">false</variable>
                 <variable name="BUILD_TESTING" type="BOOL">false</variable>
                 <variable name="USE_DCMTK" type="BOOL">true</variable>
                 <variable name="VTK_DIR" type="PROJECTBUILDPATH">VTK</variable>
@@ -92,7 +93,7 @@
                 <variable name="NAVICAD_APP_NAVICADPROTOTYPE" type="BOOL">true</variable>
                 <variable name="NAVICAD_BUILD_SHARED_LIBS" type="BOOL">true</variable>
                 <variable name="TrackingLogic_INCLUDE_DIR" type="WORKINGDIRECTORYPATH">TrackingLogic/TrackingLogic/TrackingLogic</variable>
-                <variable name="TrackingLogic_LIBRARY" type="PROJECTBUILDPATH">TrackingLogic/bin/libTrackingLogic.so</variable>
+                <variable name="TrackingLogic_LIBRARY" type="PROJECTBUILDPATH">TrackingLogic/TrackingLogic/TrackingLogic.lib</variable>
             </Configure>
             <Build>
             </Build>
