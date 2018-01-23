@@ -21,6 +21,16 @@ void OutputWidget::on_clear_clicked()
 
 void OutputWidget::append(const QString &text)
 {
+    QStringList tokens = text.split("\r\n", QString::SkipEmptyParts);
+    int count = tokens.count();
+    for(int i = 0; i < count; ++i)
+    {
+        this->append2(tokens[i]);
+    }
+}
+
+void OutputWidget::append2(const QString &text)
+{
     int crpos = text.indexOf('\r');
     if(crpos == -1)
     {

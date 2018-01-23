@@ -22,6 +22,7 @@ private slots:
     void on_clear_clicked();
 
 private:
+    void append2(const QString &text);
     void deleteCurrentLine();
     void insertText(const QString &text);
 
