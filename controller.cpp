@@ -55,31 +55,64 @@ void Controller::onProcessFinished(bool successful, int phase)
         return;
     }
 
-    m_processCounter += 1;
-    int projCount = m_parser.projectsCount();
+    //AllPhase - version 1
+    //step all projects through one phase (e.g. Checkout), than change phase (e.g. Checkout->Configure) and repeat
+//    m_processCounter += 1;
+//    int projCount = m_parser.projectsCount();
 
-    if(m_processCounter == projCount)
+//    if(m_processCounter == projCount)
+//    {
+//        if(m_requestedPhase != ControllerPhase::All || m_activePhase == m_requestedPhase)
+//        {
+//            finishPhase(phase);
+//            return;
+//        }
+
+//        m_activePhase = m_activePhase == ControllerPhase::Checkout ? ControllerPhase::Configure :
+//                       (m_activePhase == ControllerPhase::Configure ? ControllerPhase::Build : ControllerPhase::All);
+//        if(m_activePhase == ControllerPhase::All)
+//        {
+//            finishPhase(phase);
+//            return;
+//        }
+//        m_processCounter = 0;
+//        ProcessData::ProcessType processType = processTypeFromControllerPhase(m_activePhase);
+//        Project* project = m_parser.project(0);
+//        project->startProcess(processType, m_extraArguments);
+//        return;
+//    }
+
+//    ProcessData::ProcessType processType = processTypeFromControllerPhase(m_activePhase);
+//    Project* project = m_parser.project(m_processCounter);
+//    project->startProcess(processType, m_extraArguments);
+
+    //AllPhase - version 2
+    //step a project through all phases, than change to the next project
+    int projCount = m_parser.projectsCount();
+    if(m_requestedPhase != ControllerPhase::All)
     {
-        if(m_requestedPhase != ControllerPhase::All || m_activePhase == m_requestedPhase)
+        m_processCounter += 1;
+        if(m_processCounter == projCount)
         {
             finishPhase(phase);
             return;
         }
-
+    }
+    else
+    {
         m_activePhase = m_activePhase == ControllerPhase::Checkout ? ControllerPhase::Configure :
                        (m_activePhase == ControllerPhase::Configure ? ControllerPhase::Build : ControllerPhase::All);
         if(m_activePhase == ControllerPhase::All)
         {
-            finishPhase(phase);
-            return;
+            m_processCounter += 1;
+            if(m_processCounter == projCount)
+            {
+                finishPhase(phase);
+                return;
+            }
+            m_activePhase = ControllerPhase::Checkout;
         }
-        m_processCounter = 0;
-        ProcessData::ProcessType processType = processTypeFromControllerPhase(m_activePhase);
-        Project* project = m_parser.project(0);
-        project->startProcess(processType, m_extraArguments);
-        return;
     }
-
     ProcessData::ProcessType processType = processTypeFromControllerPhase(m_activePhase);
     Project* project = m_parser.project(m_processCounter);
     project->startProcess(processType, m_extraArguments);
