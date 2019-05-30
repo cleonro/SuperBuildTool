@@ -32,6 +32,8 @@ public:
     QStandardItemModel* standardItemModel();
     Parser* parser();
 
+    void eraseBuild();
+
 public:
     void open(const QString &filePath);
 

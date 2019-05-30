@@ -26,6 +26,8 @@ public:
 
     QString processTypeString(const ProcessData::ProcessType &processType);
 
+    void eraseBuild();
+
 signals:
     void processFinished(bool successful, int phase);
 

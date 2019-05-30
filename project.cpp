@@ -60,6 +60,16 @@ void Project::setProjectStructure(const QString &projectName, const QString &wor
     m_buildType = buildType;
 }
 
+void Project::eraseBuild()
+{
+    QDir projectDir(m_projectDirectory);
+    QDir buildDir(m_projectDirectory + "/build_" + m_buildType);
+    buildDir.removeRecursively();
+    projectDir.mkdir(buildDir.dirName());
+
+    qInfo() << m_projectName << " build " << m_buildType << " was erased.";
+}
+
 void Project::addProcess(Process *process)
 {
     m_processes[process->processData().type] = process;

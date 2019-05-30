@@ -166,3 +166,15 @@ Parser* Controller::parser()
 {
     return &m_parser;
 }
+
+void Controller::eraseBuild()
+{
+    for (int i = 0; i < m_parser.projectsCount(); ++i)
+    {
+        Project *p = m_parser.project(i);
+        if(p->isActive())
+        {
+            p->eraseBuild();
+        }
+    }
+}

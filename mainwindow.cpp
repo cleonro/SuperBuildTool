@@ -120,10 +120,16 @@ void MainWindow::enableButtons(bool enabled)
     ui->build->setEnabled(enabled);
     ui->all->setEnabled(enabled);
     ui->clean->setEnabled(enabled);
+    ui->eraseBuild->setEnabled(enabled);
     ui->projects->setEnabled(enabled);
 }
 
 void MainWindow::on_clean_clicked()
 {
     m_controller.startClean();
+}
+
+void MainWindow::on_eraseBuild_clicked()
+{
+    m_controller.eraseBuild();
 }

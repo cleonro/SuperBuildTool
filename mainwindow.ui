@@ -68,6 +68,13 @@
         </property>
        </widget>
       </item>
+      <item>
+       <widget class="QPushButton" name="eraseBuild">
+        <property name="text">
+         <string>Erase Build</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </item>
     <item>
@@ -101,7 +108,7 @@
      <x>0</x>
      <y>0</y>
      <width>642</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuF_ile">

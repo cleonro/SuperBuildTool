@@ -33,6 +33,8 @@ private slots:
 
     void on_clean_clicked();
 
+    void on_eraseBuild_clicked();
+
 private:
     void enableButtons(bool enabled = true);
 
