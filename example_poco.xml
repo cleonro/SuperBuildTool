@@ -1,0 +1,35 @@
+<SuperBuild>
+    <WorkingDirectory>
+    </WorkingDirectory>
+    <!--
+        Take care of CMAKE_BUILD_TYPE and CMAKE_INSTALL_PREFIX
+    -->
+    <BuildType>
+        Debug
+    </BuildType>
+    <Projects>
+        <Poco>
+            <Checkout>
+                <repository>https://github.com/pocoproject/poco.git</repository>
+                <branch>master</branch>
+            </Checkout>
+            <Configure>
+                <generator>Ninja</generator>
+                <variable name="ENABLE_CRYPTO" type="BOOL">true</variable>
+                <variable name="ENABLE_DATA" type="BOOL">true</variable>
+                <variable name="ENABLE_DATA_SQLITE" type="BOOL">true</variable>
+                <variable name="ENABLE_NET" type="BOOL">true</variable>
+                <variable name="ENABLE_NET_SSL" type="BOOL">true</variable>
+                <variable name="ENABLE_JSON" type="BOOL">true</variable>
+                <variable name="POCO_STATIC" type="BOOL">true</variable>
+                <variable name="OPENSSL_CRYPTO_LIBRARY" type="PATH">/home/catalin.ciobirca/Work/Projects/AIS/build_Debug/libs/openssl-1.0.2h-install/lib/libcrypto.a</variable>
+                <variable name="OPENSSL_INCLUDE_DIR" type="PATH">/home/catalin.ciobirca/Work/Projects/AIS/build_Debug/libs/openssl-1.0.2h-install/include</variable>
+                <variable name="OPENSSL_SSL_LIBRARY" type="PATH">/home/catalin.ciobirca/Work/Projects/AIS/build_Debug/libs/openssl-1.0.2h-install/lib/libssl.a</variable>
+                <variable name="CMAKE_INSTALL_PREFIX" type="PATH">/home/catalin.ciobirca/Work/Tests/Projects/TestSBT/Poco/install</variable>
+            </Configure>
+            <Build>
+            </Build>
+        </Poco>
+        
+    </Projects>
+</SuperBuild>
