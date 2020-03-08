@@ -13,6 +13,7 @@ const QString Parser::sProjects = "Projects";
 const QString Parser::sCheckout = "Checkout";
 const QString Parser::sRepository = "repository";
 const QString Parser::sBranch = "branch";
+const QString Parser::sCommit = "commit";
 const QString Parser::sConfigure = "Configure";
 const QString Parser::sGenerator = "generator";
 const QString Parser::sVariable = "variable";
@@ -22,6 +23,7 @@ const QString Parser::sBuild = "Build";
 
 Parser::Parser(QObject *parent)
     : QObject(parent)
+    , all(false)
 {
     m_sectionParsers[sProjects] = &Parser::parseProjectsSection;
     m_sectionParsers[sWorkingDirectory] = &Parser::parseWorkingDirectorySection;
@@ -140,6 +142,10 @@ bool Parser::parseProjectsSection(const QDomElement &element)
         createBuildProcess(proj, buildElem, item);
         n = n.nextSibling();
         m_projects.push_back(proj);
+        if(m_model.rowCount() == 0)
+        {
+            addFirstLine();
+        }
         m_model.appendRow(item);
     }
     return r;
@@ -190,14 +196,19 @@ bool Parser::createCheckoutProcess(Project *project, const QDomNode &domNode, QS
     {
         return false;
     }
+    QDomElement commitElem = e.elementsByTagName(sCommit).at(0).toElement();
+
     QString repository = repElem.text().trimmed();
     QString branch = branchElem.text().trimmed();
+    QString commit = commitElem.isNull() ? "" : commitElem.text().trimmed();
+
     Process *process = new Process(project);
     process->setProject(project);
     ProcessData &processData = process->processData();
     processData.type = ProcessData::Checkout;
     processData.repository = repository;
     processData.branch = branch;
+    processData.commit = commit;
     project->addProcess(process);
     QStandardItem *item = new QStandardItem(sCheckout);
     item->setData(sCheckout);
@@ -275,6 +286,16 @@ void Parser::clear()
     m_model.clear();
 }
 
+void Parser::addFirstLine()
+{
+    QStandardItem *item = new QStandardItem("All");
+    item->setCheckable(true);
+    item->setCheckState(Qt::Checked);
+    item->setData(sProjects);
+
+    m_model.appendRow(item);
+}
+
 int Parser::projectsCount()
 {
     int count = m_projects.count();
@@ -303,16 +324,37 @@ void Parser::onStandardItemChanged(QStandardItem *item)
 
 void Parser::onProjectItemChanged(QStandardItem *item)
 {
+    if(all)
+    {
+        return;
+    }
     QString projectName = item->text();
+    all = item->row() == 0;
+    if(all)
+    {
+        for(int i = 1; i < m_model.rowCount(); ++i)
+        {
+            m_model.item(i)->setCheckState(item->checkState());
+        }
+    }
     bool active = item->checkState() == Qt::Checked;
     for(int i = 0; i < m_projects.count(); ++i)
     {
         Project *proj = m_projects[i];
+        if(all)
+        {
+            proj->setActive(active);
+            continue;
+        }
         if(projectName == proj->projectName())
         {
             proj->setActive(active);
-            return;
+            break;
         }
+    }
+    if(all)
+    {
+        all = false;
     }
 }
 

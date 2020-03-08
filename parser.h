@@ -48,6 +48,7 @@ private:
     void onProjectItemChanged(QStandardItem *item);
 
     void clear();
+    void addFirstLine();
 
 private:
     static const QString sWorkingDirectory;
@@ -56,6 +57,7 @@ private:
     static const QString sCheckout;
     static const QString sRepository;
     static const QString sBranch;
+    static const QString sCommit;
     static const QString sConfigure;
     static const QString sGenerator;
     static const QString sVariable;
@@ -70,6 +72,7 @@ private:
     QString m_buildType;
     QVector<Project*> m_projects;
     QStandardItemModel m_model;
+    bool all;
 };
 
 #endif // PARSER_H

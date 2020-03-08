@@ -32,6 +32,7 @@ struct ProcessData
     ProcessType type;
     QString repository;
     QString branch;
+    QString commit;
     QString generator;
     QVector<CMakeVariable> cmakeVariables;
 };

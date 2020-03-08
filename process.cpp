@@ -100,13 +100,27 @@ void Process::setupProcess()
             this->setWorkingDirectory(projectDir);
             QStringList args;
             args<< "clone" << "--progress" << m_data.repository << projectName << "--branch" << m_data.branch;
+//            if(!m_data.commit.isEmpty())
+//            {
+//                args << "&&" << "cd" << projectName;
+//                args << "&&" << "git" << "checkout" << m_data.commit;
+//                args << "&&" << "cd" << "..";
+//            }
             this->setArguments(args);
         }
         else
         {
             this->setWorkingDirectory(projectDir + "/" + projectName);
             QStringList args;
-            args<< "pull" << "--progress";
+
+            if(!m_data.commit.isEmpty())
+            {
+                args << "checkout" << "--progress" << m_data.commit;
+            }
+            else
+            {
+                args<< "pull" << "--progress";
+            }
             this->setArguments(args);
         }
     }
