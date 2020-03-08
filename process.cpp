@@ -32,6 +32,7 @@ ProcessData::CMakeVariable::~CMakeVariable()
 
 Process::Process(QObject *parent)
     : QProcess(parent)
+    , m_intermediaryStepsCount(0)
 {
     m_project = nullptr;
     connect(this, &QProcess::readyReadStandardOutput, this, &Process::onReadyReadStandardOutput);
@@ -60,13 +61,15 @@ ProcessData& Process::processData()
 
 void Process::onReadyReadStandardOutput()
 {
-    QString outputText = readAllStandardOutput();
+    QProcess *process = qobject_cast<QProcess*>(sender());
+    QString outputText = process->readAllStandardOutput();
     qInfo() << outputText.toStdString().c_str();
 }
 
 void Process::onReadyReadStandardError()
 {
-    QByteArray errorText = readAllStandardError();
+    QProcess *process = qobject_cast<QProcess*>(sender());
+    QByteArray errorText = process->readAllStandardError();
     qInfo() << errorText.toStdString().c_str();
 }
 
@@ -77,36 +80,57 @@ void Process::startProcess(const QStringList &extraArguments)
         return;
     }
     setupProcess();
+    m_intermediaryStepsCount = 0;
+
     if(extraArguments.count() > 0)
     {
         QStringList args = this->arguments();
         args.append(extraArguments);
         this->setArguments(args);
     }
+
+    if(m_intermediarySteps.count() > 0)
+    {
+        m_intermediarySteps[0]->start();
+        return;
+    }
+
     this->start();
 }
 
 void Process::setupProcess()
 {
+    m_intermediarySteps.clear();
     QString projectDir = m_project->projectDirectory();
     QString projectName = m_project->projectName();
     QString buildType = m_project->buildType();
     if(m_data.type == ProcessData::Checkout)
     {
-        this->setProgram("git");
         QDir gitDir(projectDir + "/" + projectName + "/.git");
         if(!gitDir.exists())
         {
-            this->setWorkingDirectory(projectDir);
-            QStringList args;
-            args<< "clone" << "--progress" << m_data.repository << projectName << "--branch" << m_data.branch;
-//            if(!m_data.commit.isEmpty())
-//            {
-//                args << "&&" << "cd" << projectName;
-//                args << "&&" << "git" << "checkout" << m_data.commit;
-//                args << "&&" << "cd" << "..";
-//            }
-            this->setArguments(args);
+            bool intermediaryStep = !m_data.commit.isEmpty();
+            QProcess *cloneProcess = intermediaryStep ? new QProcess(this) : this;
+            cloneProcess->setProgram("git");
+            cloneProcess->setWorkingDirectory(projectDir);
+            QStringList cloneArgs;
+            cloneArgs<< "clone" << "--progress" << m_data.repository << projectName << "--branch" << m_data.branch;
+            cloneProcess->setArguments(cloneArgs);
+            if(intermediaryStep)
+            {
+                m_intermediarySteps.push_back(cloneProcess);
+                connect(cloneProcess, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished),
+                        this, &Process::onProcessFinished);
+                connect(cloneProcess, &QProcess::readyReadStandardOutput, this, &Process::onReadyReadStandardOutput);
+                connect(cloneProcess, &QProcess::readyReadStandardError, this, &Process::onReadyReadStandardError);
+
+                QProcess *checkoutProcess = this;
+                checkoutProcess->setProgram("git");
+                checkoutProcess->setWorkingDirectory(projectDir + "/" + projectName);
+                QStringList checkoutArgs;
+                checkoutArgs << "checkout" << "--progress" << m_data.commit;
+                checkoutProcess->setArguments(checkoutArgs);
+            }
         }
         else
         {
@@ -148,6 +172,23 @@ void Process::setupProcess()
         this->setWorkingDirectory(projectDir + "/build_" + buildType);
         QStringList args;
         this->setArguments(args);
+    }
+}
+
+void Process::onProcessFinished(int exitCode, QProcess::ExitStatus exitStatus)
+{
+    m_intermediaryStepsCount += 1;
+
+    if(exitStatus != QProcess::NormalExit)
+    {
+        emit this->finished(exitCode, exitStatus);
+        return;
+    }
+
+    if(m_intermediaryStepsCount == m_intermediarySteps.count())
+    {
+        m_intermediaryStepsCount = 0;
+        this->start();
     }
 }
 

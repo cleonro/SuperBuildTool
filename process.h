@@ -54,6 +54,9 @@ private slots:
     void onReadyReadStandardOutput();
     void onReadyReadStandardError();
 
+    //intermediary steps
+    void onProcessFinished(int exitCode, QProcess::ExitStatus exitStatus);
+
 private:
     void setupProcess();
     QString setupCMakeVariable(const ProcessData::CMakeVariable &cmakeVariable);
@@ -62,6 +65,8 @@ private:
     QString m_workingDirectory;
     Project *m_project;
     ProcessData m_data;
+    QVector<QProcess*> m_intermediarySteps;
+    int m_intermediaryStepsCount;
 };
 
 #endif // PROCESS_H
