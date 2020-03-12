@@ -134,6 +134,7 @@ void Process::setupProcess()
         }
         else
         {
+            this->setProgram("git");
             this->setWorkingDirectory(projectDir + "/" + projectName);
             QStringList args;
 
