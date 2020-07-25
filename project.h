@@ -29,7 +29,7 @@ public:
     void eraseBuild();
 
 signals:
-    void processFinished(bool successful, int phase);
+    void processFinished(bool successful, ProcessData::ProcessType phase);
 
 private slots:
     void onProcessFinished(int exitCode, QProcess::ExitStatus exitStatus);

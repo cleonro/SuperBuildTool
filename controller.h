@@ -9,7 +9,7 @@
 
 class QStandardItemModel;
 
-enum ControllerPhase
+enum class ControllerPhase
 {
     None = 0,
     Checkout,
@@ -38,15 +38,16 @@ public:
     void open(const QString &filePath);
 
 signals:
-    void phaseStarted(int phase);
-    void phaseFinished(int phase);
+    void phaseStarted(ControllerPhase phase);
+    void phaseFinished(ControllerPhase phase);
 
 private slots:
-    void onProcessFinished(bool successful, int phase);
+    void onProcessFinished(bool successful, ProcessData::ProcessType processFinished);
 
 private:
     ProcessData::ProcessType processTypeFromControllerPhase(const ControllerPhase &phase);
-    void finishPhase(int phase);
+    ControllerPhase controllerPhaseFromProcessType(const ProcessData::ProcessType &processType);
+    void finishPhase(ControllerPhase phase);
 
 private:
     Parser m_parser;

@@ -7,7 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 ProcessData::ProcessData()
-    : type(None)
+    : type(ProcessType::None)
 {
 
 }
@@ -104,7 +104,7 @@ void Process::setupProcess()
     QString projectDir = m_project->projectDirectory();
     QString projectName = m_project->projectName();
     QString buildType = m_project->buildType();
-    if(m_data.type == ProcessData::Checkout)
+    if(m_data.type == ProcessData::ProcessType::Checkout)
     {
         QDir gitDir(projectDir + "/" + projectName + "/.git");
         if(!gitDir.exists())
@@ -149,7 +149,7 @@ void Process::setupProcess()
             this->setArguments(args);
         }
     }
-    if(m_data.type == ProcessData::Configure)
+    if(m_data.type == ProcessData::ProcessType::Configure)
     {
         this->setProgram("cmake");
         this->setWorkingDirectory(projectDir + "/build_" + buildType);
@@ -167,7 +167,7 @@ void Process::setupProcess()
         args << sourceDir.absolutePath();
         this->setArguments(args);
     }
-    if(m_data.type == ProcessData::Build)
+    if(m_data.type == ProcessData::ProcessType::Build)
     {
         this->setProgram("ninja");
         this->setWorkingDirectory(projectDir + "/build_" + buildType);

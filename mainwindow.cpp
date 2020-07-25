@@ -101,13 +101,13 @@ void MainWindow::onOpen()
     }
 }
 
-void MainWindow::onPhaseStarted(int phase)
+void MainWindow::onPhaseStarted(ControllerPhase phase)
 {
     Q_UNUSED(phase)
     enableButtons(false);
 }
 
-void MainWindow::onPhaseFinished(int phase)
+void MainWindow::onPhaseFinished(ControllerPhase phase)
 {
     Q_UNUSED(phase)
     enableButtons();

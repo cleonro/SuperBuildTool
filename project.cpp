@@ -85,7 +85,7 @@ void Project::startProcess(ProcessData::ProcessType processType, const QStringLi
 //        QString msg = "----------- " + m_projectName + " - " + processTypeString(processType)
 //                + " no program started -----";
 //        qInfo() << msg.toStdString().c_str();
-        emit processFinished(true, (int)processType);
+        emit processFinished(true, processType);
         return;
     }
     QString msg = "----------- " + m_projectName + " - " + processTypeString(processType)
@@ -98,13 +98,12 @@ void Project::onProcessFinished(int exitCode, QProcess::ExitStatus exitStatus)
 {
     Process *sender = dynamic_cast<Process*>(this->sender());
     ProcessData::ProcessType processType = sender->processData().type;
-    int phase = (int)processType;
     bool successful = exitCode == EXIT_SUCCESS && exitStatus == QProcess::NormalExit;
     QString successString = successful ? " succeeded -----" : " failed -----";
     QString msg = "----------- " + m_projectName + " - " + processTypeString(processType)
             + successString;
     qInfo() << msg.toStdString().c_str();
-    emit processFinished(successful, phase);
+    emit processFinished(successful, processType);
 }
 
 QString Project::processTypeString(const ProcessData::ProcessType &processType)
@@ -112,16 +111,16 @@ QString Project::processTypeString(const ProcessData::ProcessType &processType)
     QString str;
     switch (processType)
     {
-    case ProcessData::None:
+    case ProcessData::ProcessType::None:
         str = "None";
         break;
-    case ProcessData::Checkout:
+    case ProcessData::ProcessType::Checkout:
         str = "Checkout";
         break;
-    case ProcessData::Configure:
+    case ProcessData::ProcessType::Configure:
         str = "Configure";
         break;
-    case ProcessData::Build:
+    case ProcessData::ProcessType::Build:
         str = "Build";
         break;
     default:

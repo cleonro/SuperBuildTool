@@ -8,7 +8,7 @@ class Project;
 
 struct ProcessData
 {
-    enum ProcessType
+    enum class ProcessType
     {
         None = 0,
         Checkout,

@@ -205,7 +205,7 @@ bool Parser::createCheckoutProcess(Project *project, const QDomNode &domNode, QS
     Process *process = new Process(project);
     process->setProject(project);
     ProcessData &processData = process->processData();
-    processData.type = ProcessData::Checkout;
+    processData.type = ProcessData::ProcessType::Checkout;
     processData.repository = repository;
     processData.branch = branch;
     processData.commit = commit;
@@ -234,7 +234,7 @@ bool Parser::createConfigureProcess(Project *project, const QDomNode &domNode, Q
     Process *process = new Process(project);
     process->setProject(project);
     ProcessData& processData = process->processData();
-    processData.type = ProcessData::Configure;
+    processData.type = ProcessData::ProcessType::Configure;
     processData.generator = generator;
     for(int i = 0; i < varNodes.count(); ++i)
     {
@@ -266,7 +266,7 @@ bool Parser::createBuildProcess(Project *project, const QDomNode &domNode, QStan
     Process *process = new Process(project);
     process->setProject(project);
     ProcessData& processData = process->processData();
-    processData.type = ProcessData::Build;
+    processData.type = ProcessData::ProcessType::Build;
     project->addProcess(process);
     QStandardItem *item = new QStandardItem(sBuild);
     item->setData(sBuild);

@@ -26,8 +26,8 @@ private slots:
 
     void onOpen();
 
-    void onPhaseStarted(int phase);
-    void onPhaseFinished(int phase);
+    void onPhaseStarted(ControllerPhase phase);
+    void onPhaseFinished(ControllerPhase phase);
 
     void on_all_clicked();
 
