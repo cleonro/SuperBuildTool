@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 
 #include <QFileDialog>
+#include <QTime>
 #include <QDebug>
 
 //test-remove
@@ -63,6 +64,9 @@ MainWindow::MainWindow(QWidget *parent) :
         qInfo() << str.toStdString().c_str();
     }
     //
+
+    connect(&m_timer, &QTimer::timeout, this, &MainWindow::onTimer);
+    m_timer.setInterval(50);
 }
 
 MainWindow::~MainWindow()
@@ -73,20 +77,64 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_checkout_clicked()
 {
-    m_controller.startPhase(ControllerPhase::Checkout);
+//    m_controller.startPhase(ControllerPhase::Checkout);
+    bool checked = ui->checkout->checkState() == Qt::Checked;
+
+    bool all_checked = checked && ui->configure->checkState() == Qt::Checked && ui->build->checkState() == Qt::Checked;
+    bool any_checked = checked || ui->configure->checkState() == Qt::Checked || ui->build->checkState() == Qt::Checked;
+    ui->all->setChecked(all_checked);
+    ui->start->setEnabled(any_checked);
+
+    m_controller.selectPhase(ControllerPhase::Checkout, checked);
 }
 
 void MainWindow::on_configure_clicked()
 {
-    m_controller.startPhase(ControllerPhase::Configure);
+//    m_controller.startPhase(ControllerPhase::Configure);
+    bool checked = ui->configure->checkState() == Qt::Checked;
+
+    bool all_checked = ui->checkout->checkState() == Qt::Checked && checked && ui->build->checkState() == Qt::Checked;
+    bool any_checked = ui->checkout->checkState() == Qt::Checked || checked || ui->build->checkState() == Qt::Checked;
+    ui->all->setChecked(all_checked);
+    ui->start->setEnabled(any_checked);
+
+    m_controller.selectPhase(ControllerPhase::Configure, checked);
 }
 
 void MainWindow::on_build_clicked()
 {
-    m_controller.startPhase(ControllerPhase::Build);
+//    m_controller.startPhase(ControllerPhase::Build);
+    bool checked = ui->build->checkState() == Qt::Checked;
+
+    bool all_checked = ui->checkout->checkState() == Qt::Checked && ui->configure->checkState() == Qt::Checked && checked;
+    bool any_checked = ui->checkout->checkState() == Qt::Checked || ui->configure->checkState() == Qt::Checked || checked;
+    ui->all->setChecked(all_checked);
+    ui->start->setEnabled(any_checked);
+
+    m_controller.selectPhase(ControllerPhase::Build, checked);
 }
 
 void MainWindow::on_all_clicked()
+{
+//    m_controller.startPhase(ControllerPhase::All);
+    bool checked = ui->all->checkState() == Qt::Checked;
+
+    {
+        ui->checkout->setChecked(checked);
+        ui->configure->setChecked(checked);
+        ui->build->setChecked(checked);
+
+        ui->start->setEnabled(checked);
+    }
+
+    {
+        m_controller.selectPhase(ControllerPhase::Checkout, checked);
+        m_controller.selectPhase(ControllerPhase::Configure, checked);
+        m_controller.selectPhase(ControllerPhase::Build, checked);
+    }
+}
+
+void MainWindow::on_start_clicked()
 {
     m_controller.startPhase(ControllerPhase::All);
 }
@@ -98,6 +146,7 @@ void MainWindow::onOpen()
     if(!filePath.isNull())
     {
         m_controller.open(filePath);
+        ui->time->setText("");
     }
 }
 
@@ -105,12 +154,16 @@ void MainWindow::onPhaseStarted(ControllerPhase phase)
 {
     Q_UNUSED(phase)
     enableButtons(false);
+    ui->time->setText("");
+    m_elapsedTime.restart();
+    m_timer.start();
 }
 
 void MainWindow::onPhaseFinished(ControllerPhase phase)
 {
     Q_UNUSED(phase)
     enableButtons();
+    m_timer.stop();
 }
 
 void MainWindow::enableButtons(bool enabled)
@@ -122,6 +175,8 @@ void MainWindow::enableButtons(bool enabled)
     ui->clean->setEnabled(enabled);
     ui->eraseBuild->setEnabled(enabled);
     ui->projects->setEnabled(enabled);
+
+    ui->start->setEnabled(enabled);
 }
 
 void MainWindow::on_clean_clicked()
@@ -132,4 +187,11 @@ void MainWindow::on_clean_clicked()
 void MainWindow::on_eraseBuild_clicked()
 {
     m_controller.eraseBuild();
+}
+
+void MainWindow::onTimer()
+{
+    qint64 milliseconds = m_elapsedTime.elapsed();
+    QString elapsedTime = QTime::fromMSecsSinceStartOfDay(milliseconds).toString("hh:mm:ss.z");
+    ui->time->setText(elapsedTime);
 }

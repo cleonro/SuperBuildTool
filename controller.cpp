@@ -8,6 +8,14 @@ Controller::Controller(QObject *parent)
     m_activePhase = ControllerPhase::None;
     m_requestedPhase = ControllerPhase::None;
     m_processCounter = 0;
+
+    {
+        m_selectedPhases[ControllerPhase::None] = false;
+        m_selectedPhases[ControllerPhase::Checkout] = false;
+        m_selectedPhases[ControllerPhase::Configure] = false;
+        m_selectedPhases[ControllerPhase::Build] = false;
+        m_selectedPhases[ControllerPhase::All] = true;
+    }
 }
 
 Controller::~Controller()
@@ -39,9 +47,17 @@ void Controller::startPhase(const ControllerPhase &phase)
         finishPhase(phase);
         return;
     }
+
+    m_activePhase = phase == ControllerPhase::All ? firstActivePhase() : phase;
+    if(m_activePhase == ControllerPhase::None)
+    {
+        finishPhase(phase);
+        return;
+    }
+
     m_processCounter = 0;
     m_requestedPhase = phase;
-    m_activePhase = phase == ControllerPhase::All ? ControllerPhase::Checkout : phase;
+
     ProcessData::ProcessType processType = processTypeFromControllerPhase(m_activePhase);
     Project* project = m_parser.project(0);
     project->startProcess(processType, m_extraArguments);
@@ -56,39 +72,6 @@ void Controller::onProcessFinished(bool successful, ProcessData::ProcessType pro
         return;
     }
 
-    //AllPhase - version 1
-    //step all projects through one phase (e.g. Checkout), than change phase (e.g. Checkout->Configure) and repeat
-//    m_processCounter += 1;
-//    int projCount = m_parser.projectsCount();
-
-//    if(m_processCounter == projCount)
-//    {
-//        if(m_requestedPhase != ControllerPhase::All || m_activePhase == m_requestedPhase)
-//        {
-//            finishPhase(phase);
-//            return;
-//        }
-
-//        m_activePhase = m_activePhase == ControllerPhase::Checkout ? ControllerPhase::Configure :
-//                       (m_activePhase == ControllerPhase::Configure ? ControllerPhase::Build : ControllerPhase::All);
-//        if(m_activePhase == ControllerPhase::All)
-//        {
-//            finishPhase(phase);
-//            return;
-//        }
-//        m_processCounter = 0;
-//        ProcessData::ProcessType processType = processTypeFromControllerPhase(m_activePhase);
-//        Project* project = m_parser.project(0);
-//        project->startProcess(processType, m_extraArguments);
-//        return;
-//    }
-
-//    ProcessData::ProcessType processType = processTypeFromControllerPhase(m_activePhase);
-//    Project* project = m_parser.project(m_processCounter);
-//    project->startProcess(processType, m_extraArguments);
-
-    //AllPhase - version 2
-    //step a project through all phases, than change to the next project
     int projCount = m_parser.projectsCount();
     if(m_requestedPhase != ControllerPhase::All)
     {
@@ -101,8 +84,7 @@ void Controller::onProcessFinished(bool successful, ProcessData::ProcessType pro
     }
     else
     {
-        m_activePhase = m_activePhase == ControllerPhase::Checkout ? ControllerPhase::Configure :
-                       (m_activePhase == ControllerPhase::Configure ? ControllerPhase::Build : ControllerPhase::All);
+        m_activePhase = nextActivePhase(m_activePhase);
         if(m_activePhase == ControllerPhase::All)
         {
             m_processCounter += 1;
@@ -117,6 +99,50 @@ void Controller::onProcessFinished(bool successful, ProcessData::ProcessType pro
     ProcessData::ProcessType processToStart = processTypeFromControllerPhase(m_activePhase);
     Project* project = m_parser.project(m_processCounter);
     project->startProcess(processToStart, m_extraArguments);
+}
+
+ControllerPhase Controller::nextActivePhase(ControllerPhase currentActivePhase)
+{
+    ControllerPhase result = ControllerPhase::All;
+    if(currentActivePhase == ControllerPhase::Checkout)
+    {
+        if(m_selectedPhases[ControllerPhase::Configure])
+        {
+            result = ControllerPhase::Configure;
+        }
+        else if(m_selectedPhases[ControllerPhase::Build])
+        {
+            result = ControllerPhase::Build;
+        }
+    }
+    if(currentActivePhase == ControllerPhase::Configure)
+    {
+        if(m_selectedPhases[ControllerPhase::Build])
+        {
+            result = ControllerPhase::Build;
+        }
+    }
+
+    return result;
+}
+
+ControllerPhase Controller::firstActivePhase()
+{
+    ControllerPhase result = ControllerPhase::None;
+    if(m_selectedPhases[ControllerPhase::Checkout])
+    {
+        result = ControllerPhase::Checkout;
+    }
+    else if(m_selectedPhases[ControllerPhase::Configure])
+    {
+        result = ControllerPhase::Configure;
+    }
+    else if(m_selectedPhases[ControllerPhase::Build])
+    {
+        result = ControllerPhase::Build;
+    }
+
+    return result;
 }
 
 ProcessData::ProcessType Controller::processTypeFromControllerPhase(const ControllerPhase &phase)
@@ -198,4 +224,9 @@ void Controller::eraseBuild()
             p->eraseBuild();
         }
     }
+}
+
+void Controller::selectPhase(ControllerPhase phase, bool selected)
+{
+    m_selectedPhases[phase] = selected;
 }

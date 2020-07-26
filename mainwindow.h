@@ -4,6 +4,8 @@
 #include "controller.h"
 
 #include <QMainWindow>
+#include <QTimer>
+#include <QElapsedTimer>
 
 namespace Ui {
 class MainWindow;
@@ -35,12 +37,19 @@ private slots:
 
     void on_eraseBuild_clicked();
 
+    void on_start_clicked();
+
+    void onTimer();
+
 private:
     void enableButtons(bool enabled = true);
 
 private:
     Ui::MainWindow *ui;
     Controller m_controller;
+
+    QTimer m_timer;
+    QElapsedTimer m_elapsedTime;
 };
 
 #endif // MAINWINDOW_H

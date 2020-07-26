@@ -1,7 +1,7 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
-#include <QObject>
+#include <QMap>
 
 #include "parser.h"
 #include "project.h"
@@ -34,8 +34,9 @@ public:
 
     void eraseBuild();
 
-public:
     void open(const QString &filePath);
+
+    void selectPhase(ControllerPhase phase, bool selected);
 
 signals:
     void phaseStarted(ControllerPhase phase);
@@ -49,12 +50,17 @@ private:
     ControllerPhase controllerPhaseFromProcessType(const ProcessData::ProcessType &processType);
     void finishPhase(ControllerPhase phase);
 
+    ControllerPhase nextActivePhase(ControllerPhase currentActivePhase);
+    ControllerPhase firstActivePhase();
+
 private:
     Parser m_parser;
     ControllerPhase m_activePhase;
     ControllerPhase m_requestedPhase;
     int m_processCounter;
     QStringList m_extraArguments;
+
+    QMap<ControllerPhase, bool> m_selectedPhases;
 };
 
 #endif // CONTROLLER_H
