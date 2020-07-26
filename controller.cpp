@@ -93,7 +93,7 @@ void Controller::onProcessFinished(bool successful, ProcessData::ProcessType pro
                 finishPhase(phaseFinished);
                 return;
             }
-            m_activePhase = ControllerPhase::Checkout;
+            m_activePhase = firstActivePhase();
         }
     }
     ProcessData::ProcessType processToStart = processTypeFromControllerPhase(m_activePhase);
