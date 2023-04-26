@@ -96,6 +96,12 @@ void Process::startProcess(const QStringList &extraArguments)
     }
 
     this->start();
+    auto processState = this->state();
+    if(processState == QProcess::NotRunning)
+    {
+        qInfo() << this->program() << " was not started.";
+        emit this->finished(1, QProcess::CrashExit);
+    }
 }
 
 void Process::setupProcess()
